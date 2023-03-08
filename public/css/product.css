@@ -1,0 +1,52 @@
+.product-form {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+}
+
+.product-item {
+  width: 20rem;
+  max-width: 95%;
+  border-bottom: 5px solid #00695c;
+  margin: 10px 0;
+}
+
+.product__title {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.product__price {
+  text-align: center;
+  color: #4d4d4d;
+  margin-bottom: 0.5rem;
+}
+
+.product__description {
+  text-align: center;
+}
+
+.error {
+  background-color: rgba(208, 110, 110, 0.492);
+  padding: 0 10px;
+  box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 05);
+}
+.error h3 {
+  font-weight: 500;
+  margin: 0;
+  color: red;
+}
+
+.product-form .message {
+  padding: 3px;
+}
+.product-form .message.error {
+  background-color: rgba(208, 110, 110, 0.492);
+}
+.product-form .message.success {
+  background: #43e04352;
+}
+.product-form .message h3 {
+  font-size: 16px;
+  margin: 0;
+}

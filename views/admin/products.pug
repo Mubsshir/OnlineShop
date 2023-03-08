@@ -1,0 +1,31 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet", href="/css/product.css")
+block content
+  main
+    if err 
+      .error 
+        h3 Error occure while fetching products from backend.
+    else 
+      if prods.length>0
+        .grid
+          each product in prods
+            article.card.product-item
+              header.card__header 
+                h1.product__title #{product.ProductName}
+            
+              div.card__image
+                img(src=product.ProductImg, alt="A Book")
+              div.card__content
+                h2.product__price $#{product.ProductPrice}
+                p.product__description #{product.ProductDesc}
+              .card__actions
+                form(action="/admin/edit-product/"+product.ProductTblRefID,method="GET")
+                  button.btn(type="submit") Edit
+                form(action="/admin/delete-product",method="POST")
+                  input(type="hidden",name="id" ,value=product.ProductTblRefID)
+                  button.btn(type="submit") Delete
+      else
+         h1 No Products in shop  
+
+

@@ -1,0 +1,29 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet", href="/css/cart.css")
+block content
+  if prods.length>0
+    section.container
+      each product in prods 
+        article.product
+          .productInfo
+            h3.title #{product.ProductName} 
+            .qtySec 
+              h3.qty Quantity : #{product.Qty} 
+              .qty_btn 
+                button.Pbtn -
+                button.Pbtn +
+          .productTotal 
+            h3.price $#{product.ProductTotal}
+            form(action="/delete-cart",method="POST" )
+              input(type="hidden" ,name="id" ,value=product.CartID)
+              button.Pbtn(type="submit") Delete
+    section.container
+      article.CartSummary
+        h3.totalPrice 
+          span.label Cart Total Price : 
+          | $#{total}
+        button.btn Checkout Now
+
+  else 
+    h2 Cart is Empty 

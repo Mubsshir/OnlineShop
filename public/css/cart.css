@@ -1,0 +1,64 @@
+*{
+  box-sizing: border-box;
+}
+
+.container {
+  width: 40vw;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.5);
+  margin: 50px  auto 10px auto;
+  padding: 5px 5px 20px 5px;
+  border-bottom: 3px solid #00695c;
+}
+.product {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dotted green;
+  padding: 5px 0;
+}
+.product .productInfo .title {
+  color: #00695c;
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+}
+.product .qtySec {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.product .qtySec .qty{
+  font-size: 16px;
+  font-weight: lighter;
+}
+.product .qtySec .qty_btn {
+  margin-left: 16px;
+}
+.Pbtn {
+  text-decoration: none;
+  font: inherit;
+  border: 1px solid #00695c;
+  color: #00695c;
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 2px 5px;
+  margin-right: 3px;
+}
+.container .totalPrice .label{
+  color: #00695c;
+  font-weight: 600;
+}
+.container .totalPrice{
+  font-weight: lighter;
+}
+.container .CartSummary{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.Pbtn:hover,
+.Pbtn:active {
+  background-color: #00695c;
+  color: white;
+}

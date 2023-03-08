@@ -1,0 +1,29 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet",href="/css/forms.css")
+  link(rel="stylesheet", href="/css/product.css")
+
+block content     
+  main
+    form.product-form(action="/admin/add-product",method="POST")
+      if showMessage
+        if (status)
+          .message.success
+            h3.success Product Added Successfully 
+        else
+          .message.error
+            h3.error Somthing went wrong.Nothing added
+        script. 
+          setTimeout(()=>{
+            document.querySelector(".product-form .message").style.display='none';
+          },5000)
+      div.form-control
+        label(for="title") Title
+        input(type="text" ,name="title", id="title")
+        label(for="img") Product Image Url
+        input(type="text" ,name="img", id="img")
+        label(for="price") Price
+        input(type="number" ,name="price", id="price")
+        label(for="desc") Description
+        textarea(cols="40", rows="4",name="desc", id="desc")
+      button.btn(type="submit") Add Product 

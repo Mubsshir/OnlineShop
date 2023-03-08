@@ -1,0 +1,29 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet", href="/css/product.css")
+block content
+  main
+    if err 
+      .error 
+        h3 Error occure while fetching products from backend.
+    else
+      if prods.length>0
+        .grid
+          each product in prods
+            article.card.product-item
+              header.card__header 
+                h1.product__title #{product.ProductName}
+            
+              div.card__image
+                img(src=product.ProductImg, alt="A Book")
+              div.card__content
+                h2.product__price $#{product.ProductPrice}
+                p.product__description #{product.ProductDesc}
+              .card__actions
+                form(action="/products/" + product.ProductTblRefID,method="POST")
+                  button.btn(type="submit") Details
+                include ../layouts/add-to-cart.pug
+      else
+        h1 Shop is empty
+
+
