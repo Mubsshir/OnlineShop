@@ -18,3 +18,10 @@
 .form-control input:focus {
     outline-color: #00695c;
 }
+
+
+.login-form {
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
+  }

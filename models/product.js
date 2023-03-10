@@ -1,11 +1,12 @@
 const { pool, sql, connect } = require("../util/database");
 
 class Product {
-  constructor(title, imgUrl, price, description) {
+  constructor(title, imgUrl, price, description,userID) {
     this.title = title;
     this.imgUrl = imgUrl;
     this.price = price;
     this.description = description;
+    this.userID=userID
   }
 
   async saveProduct() {
@@ -16,6 +17,7 @@ class Product {
       request.input("price", this.price);
       request.input("desc", this.description);
       request.input("img", this.imgUrl);
+      request.input('uid',this.userID);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_AddProduct");
       const rowAffected = result.output.rowAffected;

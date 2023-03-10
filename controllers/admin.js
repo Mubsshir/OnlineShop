@@ -2,7 +2,8 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 exports.postAddProduct = async (req, res, next) => {
   const { title, img, price, desc } = req.body;
-  const product = new Product(title, img, price, desc);
+
+  const product = new Product(title, img, price, desc,req.user.UserID);
   const result = await product.saveProduct();
   res.render("admin/add-product", {
     docTitle: "Add Product",

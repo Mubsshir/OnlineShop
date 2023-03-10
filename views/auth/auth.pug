@@ -1,0 +1,20 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet",href="/css/forms.css")
+block content
+  main
+    form.login-form(action="/login",method="POST")
+      if showMessage
+        if (!status)
+          .message.error
+            h3.error username/password incorrect
+        script. 
+          setTimeout(()=>{
+            document.querySelector(".product-form .message").style.display='none';
+          },5000)
+      div.form-control
+        label(for="user") User Name
+        input(type="text" ,name="user", id="user")
+        label(for="email") Email
+        input(type="email" ,name="email", id="email")
+      button.btn(type="submit") Login
