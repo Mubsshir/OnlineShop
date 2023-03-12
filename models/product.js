@@ -43,6 +43,10 @@ class Product {
       return { products: result.recordset, error: false };
     } catch (err) {
       console.log(err + " :while connecting to db");
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
       return { products: [], error: true };
     }
   }
@@ -55,10 +59,17 @@ class Product {
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_FindProduct");
       const rowAffected = result.output.rowAffected;
-      console.log(rowAffected);
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
       return result.recordset;
     } catch (err) {
       console.log("Error : " + err);
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
       return {};
     }
   }
@@ -86,14 +97,19 @@ class Product {
     }
   }
 
-  static async deleteItem(id) {
+  static async deleteItem(id,uid) {
     try {
       await connect();
       const request = await pool.request();
       request.input("id", id);
+      request.input("uid", uid);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_DeleteProduct");
       const rowAffected = result.output.rowAffected;
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
       if (rowAffected > 0) {
         return { success: true };
       } else {
@@ -102,6 +118,10 @@ class Product {
         );
       }
     } catch (err) {
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
       console.log("Error: " + err);
       return { success: false };
     }

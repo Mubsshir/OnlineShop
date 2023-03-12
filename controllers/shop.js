@@ -27,21 +27,23 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = async (req, res) => {
   const cartProducts = await Cart.getCartProducts();
-  console.log(cartProducts);
   res.render("shop/cart", {
     docTitle: "Your Cart",
     prods: cartProducts[0],
-    total:cartProducts[1][0].CartTotal
+    total:cartProducts[1][0].CartTotal,
+    path:'/cart'
   });
 };
 exports.postCart = async (req, res) => {
   const prodID = req.body.productID;
-  await Cart.addProduct(parseInt(prodID));
+  const uid=req.user.UserID
+  await Cart.addProduct(parseInt(prodID),parseInt(uid));
   res.redirect("/cart");
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
-  await Cart.deleteItemFromCart(id);
+  const uid=req.user.UserID
+  await Cart.deleteItemFromCart(id,parseInt(uid));
   res.redirect("/cart");
 };
 exports.getCheckout = (req, res) => {
