@@ -80,5 +80,25 @@ class Cart {
       console.log("Error : " + err);
     }
   }
+  static async moveToOrder(uid){
+    try{
+      await connect();
+      const request=await pool.request();
+      request.input("uid",uid);
+      request.output("rowAffected",sql.Int)
+      const result=await request.execute('USP_MoveToOrder');
+      const rowAffected=result.output.rowAffected;
+      pool.close();
+      if(rowAffected>0){
+        console.log("Order created");
+      }
+      else{
+        throw new Error("Somthing went wrong unable to place order")
+      }
+      
+    }catch(err){
+      console.log("Error: "+err)
+    }
+  }
 }
 module.exports = Cart;

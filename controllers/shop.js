@@ -27,10 +27,12 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = async (req, res) => {
   const cartProducts = await Cart.getCartProducts();
+  const userid=req.user.UserID
   res.render("shop/cart", {
     docTitle: "Your Cart",
     prods: cartProducts[0],
     total:cartProducts[1][0].CartTotal,
+    userId:userid,
     path:'/cart'
   });
 };
@@ -58,3 +60,9 @@ exports.getOrders = (req, res) => {
     path: "/orders",
   });
 };
+
+exports.postOrder=async (req,res)=>{
+  const uid=req.body.userid;
+  await Cart.moveToOrder(uid);
+  res.redirect('/orders')
+}

@@ -23,7 +23,9 @@ block content
         h3.totalPrice 
           span.label Cart Total Price : 
           | $#{total}
-        button.btn Checkout Now
+        form(action="/orders" ,method="POST") 
+          input(type="hidden",name="userid",value=userId)
+          button.btn(type="submit") Checkout Now
 
   else 
     h2 Cart is Empty 
