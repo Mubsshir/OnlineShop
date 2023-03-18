@@ -1,0 +1,63 @@
+[
+  {
+    "order_date": "2023-03-16",
+    "products": [
+      {
+        "UserId": 3,
+        "ProductName": "XBOX ONE",
+        "ProductPrice": 559,
+        "Qty": 2,
+        "Order Date": "2023-03-16"
+      },
+      {
+        "UserId": 3,
+        "ProductName": "Nike Air Sneaker",
+        "ProductPrice": 1500,
+        "Qty": 1,
+        "Order Date": "2023-03-16"
+      },
+      {
+        "UserId": 3,
+        "ProductName": "Cricket Kit",
+        "ProductPrice": 120.99,
+        "Qty": 1,
+        "Order Date": "2023-03-16"
+      },
+      {
+        "UserId": 3,
+        "ProductName": "Python Machine Learning",
+        "ProductPrice": 5,
+        "Qty": 1,
+        "Order Date": "2023-03-16"
+      }
+    ],
+    "total": 2743.99
+  },
+  {
+    "order_date": "2023-03-18",
+    "products": [
+      {
+        "UserId": 3,
+        "ProductName": "Graphic Card",
+        "ProductPrice": 699,
+        "Qty": 1,
+        "Order Date": "2023-03-18"
+      },
+      {
+        "UserId": 3,
+        "ProductName": "PS5",
+        "ProductPrice": 499,
+        "Qty": 1,
+        "Order Date": "2023-03-18"
+      },
+      {
+        "UserId": 3,
+        "ProductName": "Python Machine Learning",
+        "ProductPrice": 5,
+        "Qty": 1,
+        "Order Date": "2023-03-18"
+      }
+    ],
+    "total": 1203
+  }
+]

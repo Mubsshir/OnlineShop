@@ -54,10 +54,13 @@ exports.getCheckout = (req, res) => {
     path: "/checkout",
   });
 };
-exports.getOrders = (req, res) => {
+exports.getOrders =async (req, res) => {
+  const orders=await Cart.fetchOrders(req.user.UserID)
+  console.log(JSON.stringify(orders))
   res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
+    orders:orders
   });
 };
 

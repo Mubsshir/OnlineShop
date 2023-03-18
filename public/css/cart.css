@@ -9,12 +9,19 @@
   padding: 5px 5px 20px 5px;
   border-bottom: 3px solid #00695c;
 }
+.container.order {
+  width: 40vw;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.5);
+  margin: 50px  auto 10px auto;
+  padding: 0px 0px 20px 0px;
+  border-bottom: 3px solid #00695c;
+}
 .product {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   border-bottom: 1px dotted green;
-  padding: 5px 0;
+  padding: 5px 3px;
 }
 .product .productInfo .title {
   color: #00695c;
@@ -34,6 +41,16 @@
 .product .qtySec .qty_btn {
   margin-left: 16px;
 }
+h3.price{
+  margin: 0 5px 0 0;
+}
+h3.orderDate{
+  margin: 0 0 15px 0;
+  background-color: #00695c;
+  padding: 5px 10px;
+  color: white;
+}
+
 .Pbtn {
   text-decoration: none;
   font: inherit;
@@ -61,4 +78,9 @@
 .Pbtn:active {
   background-color: #00695c;
   color: white;
+}
+
+
+main.order{
+  display: flex;
 }
