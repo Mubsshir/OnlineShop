@@ -1,9 +1,9 @@
 const sql = require("mssql");
 
 const config = {
-  server: "localhost",
-  database: "OnlineShop",
-  user: "mubsshir",
+  server: 'sql.bsite.net\\MSSQL2016',
+  database: "mubsshir_shop",
+  user: "mubsshir_shop",
   password: "112233",
   port: 1433,
   options: {
@@ -27,7 +27,7 @@ const connect = async () => {
       console.log("Connection failed");
     }
   } catch (err) {
-    console.log("error while connecting to database");
+    console.log("error while connecting to database: "+ err);
   }
 };
 
