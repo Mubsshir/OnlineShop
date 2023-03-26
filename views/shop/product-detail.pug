@@ -10,4 +10,5 @@ block content
       .product-desc 
         h3.desc #{product.ProductDesc}
         h2.price $#{product.ProductPrice}
-        include ../layouts/add-to-cart.pug
+        if isAuthenticate
+          include ../layouts/add-to-cart.pug

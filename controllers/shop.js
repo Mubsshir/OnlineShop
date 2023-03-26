@@ -7,7 +7,7 @@ exports.getProducts = async (req, res, next) => {
     docTitle: "All Products",
     path: "/products",
     err: result.error,
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 
@@ -17,14 +17,14 @@ exports.getProduct = async (req, res) => {
   res.render("shop/product-detail", {
     product: product[0],
     docTitle: "/products/" + product[0].ProductName,
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 exports.getIndex = (req, res, next) => {
   res.render("shop/index", {
     docTitle: "Shop",
     path: "/",
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 
@@ -37,7 +37,7 @@ exports.getCart = async (req, res) => {
     total:cartProducts[1][0].CartTotal,
     userId:userid,
     path:'/cart',
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 exports.postCart = async (req, res) => {
@@ -45,20 +45,20 @@ exports.postCart = async (req, res) => {
   const uid=req.user.UserID
   await Cart.addProduct(parseInt(prodID),parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate:false
+  isAuthenticate:req.session.isAuthenticate
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
   const uid=req.user.UserID
   await Cart.deleteItemFromCart(id,parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate:false
+  isAuthenticate:req.session.isAuthenticate
 };
 exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     docTitle: "Checkout",
     path: "/checkout",
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 exports.getOrders =async (req, res) => {
@@ -68,7 +68,7 @@ exports.getOrders =async (req, res) => {
     docTitle: "Your Orders",
     path: "/orders",
     orders:orders,
-    isAuthenticate:false
+    isAuthenticate:req.session.isAuthenticate
   });
 };
 

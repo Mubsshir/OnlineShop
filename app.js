@@ -6,25 +6,18 @@ const shopRoutes = require("./routes/shop/shop");
 const authRoutes = require("./routes/auth");
 const route404 = require("./routes/404");
 const app = express();
-const { sql, config } = require("./util/database");
-const User = require("./models/user");
-const session = require("express-session");
-const SessionStore = require("mssql-session-store")(session);
-
-const options = {
-  pool: new sql.ConnectionPool(config),
-  ttl: 3600,
-};
+const {store,session}=require('./util/sessionStore')
 
 // set template engine
 app.set("view engine", "pug");
 //set user session
+store.sync()
 app.use(
   session({
     secret: "hello",
     resave: false,
     saveUninitialized: false,
-    store: new SessionStore(options),
+    store:store,
   })
 );
 // set request body parser

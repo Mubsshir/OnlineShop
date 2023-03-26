@@ -22,7 +22,8 @@ block content
               .card__actions
                 form(action="/products/" + product.ProductTblRefID,method="POST")
                   button.btn(type="submit") Details
-                include ../layouts/add-to-cart.pug
+                if isAuthenticate
+                  include ../layouts/add-to-cart.pug
       else
         h1 Shop is empty
 
