@@ -9,7 +9,7 @@ exports.postAddProduct = async (req, res, next) => {
     docTitle: "Add Product",
     status: result.success,
     showMessage: true,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
@@ -20,7 +20,7 @@ exports.getAdminProducts = async (req, res, next) => {
     path: "/admin/products",
     prods: result.products,
     err: result.error,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
@@ -29,7 +29,7 @@ exports.getAddProduct = (req, res) => {
     docTitle: "add product",
     path: "/admin/add-product",
     showMessage: false,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
@@ -40,7 +40,7 @@ exports.getEditProduct = async (req, res) => {
   res.render("admin/edit-product", {
     docTitle: "Edit Product",
     prod: product[0],
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 exports.postEditProduct = async (req, res) => {
@@ -50,6 +50,6 @@ exports.postEditProduct = async (req, res) => {
 exports.postDeleteProduct = async (req, res) => {
   const prodID = req.body.id;
   const uid=req.user.UserID
-  const result = await Product.deleteItem(prodID,uid);
+  await Product.deleteItem(prodID,uid);
   res.redirect("/admin/products");
 };

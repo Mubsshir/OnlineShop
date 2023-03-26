@@ -31,4 +31,4 @@ const connect = async () => {
   }
 };
 
-module.exports = { sql, pool, connect };
+module.exports = { sql, pool, connect ,config};

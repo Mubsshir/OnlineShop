@@ -7,7 +7,7 @@ exports.getProducts = async (req, res, next) => {
     docTitle: "All Products",
     path: "/products",
     err: result.error,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
@@ -17,14 +17,14 @@ exports.getProduct = async (req, res) => {
   res.render("shop/product-detail", {
     product: product[0],
     docTitle: "/products/" + product[0].ProductName,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 exports.getIndex = (req, res, next) => {
   res.render("shop/index", {
     docTitle: "Shop",
     path: "/",
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
@@ -37,7 +37,7 @@ exports.getCart = async (req, res) => {
     total:cartProducts[1][0].CartTotal,
     userId:userid,
     path:'/cart',
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 exports.postCart = async (req, res) => {
@@ -45,20 +45,20 @@ exports.postCart = async (req, res) => {
   const uid=req.user.UserID
   await Cart.addProduct(parseInt(prodID),parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate:req.isLoggedIn
+  isAuthenticate:false
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
   const uid=req.user.UserID
   await Cart.deleteItemFromCart(id,parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate:req.isLoggedIn
+  isAuthenticate:false
 };
 exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     docTitle: "Checkout",
     path: "/checkout",
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 exports.getOrders =async (req, res) => {
@@ -68,7 +68,7 @@ exports.getOrders =async (req, res) => {
     docTitle: "Your Orders",
     path: "/orders",
     orders:orders,
-    isAuthenticate:req.isLoggedIn
+    isAuthenticate:false
   });
 };
 
