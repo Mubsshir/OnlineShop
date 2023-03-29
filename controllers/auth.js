@@ -10,8 +10,8 @@ exports.getLogin = (req, res) => {
   });
 };
 exports.postLogin = async (req, res) => {
-  const name = req.body.user;
   const email = req.body.email;
+  const pass=req.body.pass;
   const user = new User(name, email);
   req.session.isAuthenticate = true;
   req.session.save(err=>{
@@ -20,7 +20,22 @@ exports.postLogin = async (req, res) => {
     }
   })
 };
-
+exports.postSingup=async(req,res)=>{
+  const email=req.body.email;
+  const pass=req.body.pass;
+  const cpwd=req.body.cpwd;
+  if(pass===cpwd){
+    const existingUser=await User.FindByEmail(email);
+    if(existingUser){
+      console.log("user already existed");
+    }
+    else{
+      const user=new User(email,pass);
+      await user.save();
+      res.redirect('/login');
+    }
+  }
+}
 exports.postLogout = (req, res) => {
   console.log("In post logout")
   const sessionId = req.session.id;

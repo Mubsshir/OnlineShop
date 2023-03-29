@@ -12,9 +12,26 @@ block content
           setTimeout(()=>{
             document.querySelector(".product-form .message").style.display='none';
           },5000)
-      div.form-control
-        label(for="user") User Name
-        input(type="text" ,name="user", id="user")
+      div.form-control.login
         label(for="email") Email
         input(type="email" ,name="email", id="email")
+        label(for="password") Password
+        input(type="email" ,name="email", id="email")
         button.btn(type="submit") Login 
+        h3.signLink Don't have an Account? 
+          span.sign SignUp 
+          | Here !
+  
+    form.signUp-form(action="/signup",method="POST")
+      div.form-control.signup
+        label(for="email") Email 
+        input(type="email" ,name="email", id="email")
+        label(for="password") Password
+        input(type="password" ,name="pass", id="pass")
+        label(for="cpwd") Confirm Password
+        input(type="password" ,name="cpwd", id="cpwd")
+        button.btn(type="submit") Sign Up
+        h3.loginLink Already have an Account? 
+          span.sign Login 
+          | Here !
+  script(src='/javascript/auth.js')

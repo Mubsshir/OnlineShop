@@ -19,9 +19,31 @@
     outline-color: #00695c;
 }
 
-
-.login-form {
+.form-control.login{
+    display: block;
+}
+.form-control.signup{   
+    display: none;
+}
+.login-form,.signUp-form {
     width: 20rem;
     max-width: 90%;
     margin: auto;
   }
+
+.signLink,.loginLink{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.signLink span,.loginLink span{
+    color: #00695c;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.signLink span:hover,
+.loginLink span:hover
+{
+    text-decoration: underline;
+}

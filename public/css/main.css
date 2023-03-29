@@ -120,6 +120,7 @@ main {
   cursor: pointer;
   padding: 2px 5px;
   margin-right: 3px;
+  margin-top: 10px;
 }
 
 .btn:hover,
