@@ -36,14 +36,20 @@
     font-weight: 500;
 }
 
-.signLink span,.loginLink span{
+.signLink a,.loginLink a{
     color: #00695c;
     font-weight: 600;
     cursor: pointer;
 }
 
-.signLink span:hover,
-.loginLink span:hover
+.signLink a:hover,
+.loginLink a:hover
 {
     text-decoration: underline;
+}
+
+.signUp-form .error{
+    color: red;
+    font-weight: 600;
+    display: none;
 }
