@@ -34,10 +34,11 @@ class User {
       console.log("Error : " + err);
     }
   }
-  static async FindById(id) {
+  static async FindById(id,result=true) {
     try {
       await connect();
       const request = await pool.request();
+      request.input("email",email)
       request.input("id", id);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_FindUser");
@@ -48,7 +49,12 @@ class User {
       }
       if (rowAffected > 0) {
         console.log("User Find");
-        return result.recordset[0];
+        if(result){
+          return result.recordset[0];
+        }
+        else{
+          return true;
+        }
       } else {
         throw new Error("Somthing went wrong unable to find user");
       }
@@ -58,14 +64,21 @@ class User {
         console.log("Database connetion closed.");
       }
       console.log("Error : " + err);
+      if(result){
+        return [];
+      }
+      else{
+        return false;
+      }
     }
   }
 
-  static async FindByEmail(email) {
+  static async FindByEmail(email,result=false) {
     try {
       await connect();
       const request = await pool.request();
       request.input("email", email);
+      request.input("id",-1)
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_FindUser");
       const rowAffected = result.output.rowAffected;
@@ -75,7 +88,12 @@ class User {
       }
       if (rowAffected > 0) {
         console.log("User Find");
-        return true;
+        if(result){
+          return result.recordset[0];
+        }
+        else{
+          return true;
+        }
       } else {
         throw new Error("Somthing went wrong unable to find user");
       }
@@ -85,7 +103,12 @@ class User {
         console.log("Database connetion closed.");
       }
       console.log("While Finding user by email : " + err);
-      return false;
+      if(result){
+        return [];
+      }
+      else{
+        return false;
+      }
     }
   }
 }
