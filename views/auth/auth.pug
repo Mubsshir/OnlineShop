@@ -3,38 +3,21 @@ block stylesheet
   link(rel="stylesheet",href="/css/forms.css")
 block content
   main
-    if docTitle="Login"
-      form.login-form(action="/login",method="POST")
-        if showMessage
-          if (!status)
-            .message.error
-              h3.error username/password incorrect
-          script. 
-            setTimeout(()=>{
-              document.querySelector(".product-form .message").style.display='none';
-            },5000)
-        div.form-control.login#loginForm
-          label(for="email") Email
-          input(type="email" ,name="email", id="email")
-          label(for="password") Password
-          input(type="email" ,name="email", id="email")
-          button.btn(type="submit") Login 
-          h3.signLink Don't have an Account? 
-            a.sign SignUp 
-            | Here !
-    if docTitle='SignUp'
-      form.signUp-form(action="/signup",method="POST")
-        if error 
-          h3.error User Already Existed
-        div.form-control.signup
-          label(for="email") Email 
-          input(type="email" ,name="email", id="email")
-          label(for="password") Password
-          input(type="password" ,name="pass", id="pass")
-          label(for="cpwd") Confirm Password
-          input(type="password" ,name="cpwd", id="cpwd")
-          button.btn(type="submit") Sign Up
-          h3.loginLink Already have an Account? 
-            a.sign Login 
-            | Here !
-  script(src='/javascript/auth.js')
+    form.login-form(action="/login",method="POST")
+      if showMessage
+        if (!status)
+          .message.error
+            h3.error username/password incorrect
+        script. 
+          setTimeout(()=>{
+            document.querySelector(".product-form .message").style.display='none';
+          },5000)
+      div.form-control.login#loginForm
+        label(for="email") Email
+        input(type="email" ,name="email", id="email")
+        label(for="password") Password
+        input(type="password" ,name="pass", id="password")
+        button.btn(type="submit") Login 
+        h3.signLink Don't have an Account? 
+          a.sign(href="/signup") SignUp 
+          | Here !

@@ -1,0 +1,19 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet",href="/css/forms.css")
+block content
+  main
+    form.signUp-form(action="/signup",method="POST")
+        if error 
+          h3.error #{msg}
+        div.form-control.signup
+          label(for="email") Email 
+          input(type="email" ,name="email", id="email", value=values &&values[0]?values[0]:"")
+          label(for="password") Password
+          input(type="password" ,name="pass", id="pass", value=values &&values[1]?values[1]:"")
+          label(for="cpwd") Confirm Password
+          input(type="password" ,name="cpwd", id="cpwd", value=values &&values[2]?values[2]:"")
+          button.btn(type="submit") Sign Up
+          h3.loginLink Already have an Account? 
+            a.sign(href="/login") Login     
+            | Here !s

@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const { store } = require("../util/sessionStore");
-
+const bcrypt = require("bcryptjs");
 exports.getLogin = (req, res) => {
   res.render("auth/auth", {
     docTitle: "Login",
@@ -8,20 +8,40 @@ exports.getLogin = (req, res) => {
     isAuthenticate: req.session.isAuthenticate,
   });
 };
+exports.getSignup = (req, res) => {
+  if (req.session.isAuthenticate) {
+    res.redirect("/");
+  }
+  res.render("auth/signup", {
+    docTitle: "SignUp",
+  });
+};
 
 exports.postLogin = async (req, res) => {
   const email = req.body.email;
   const pass = req.body.pass;
-  const user = new User(name, email);
-  req.session.isAuthenticate = true;
-  req.session.save((err) => {
-    if (!err) {
-      res.redirect("/");
+  const isUser = await User.fetchUserPass(email);
+  if (isUser.result) {
+    const isCorrectPass = await bcrypt.compare(pass, isUser.result);
+    if(isCorrectPass){
+      req.session.isAuthenticate = true;
+      req.session.save((err) => {
+        if (!err) {
+          res.redirect("/");
+        }
+      });
+      
     }
-  });
+  }
+  req.session.isAuthenticate = false;
+    req.session.save((err) => {
+      if (!err) {
+        res.redirect("/login");
+      }
+    });
 };
 
-exports.postSingup = async (req, res) => {
+exports.postSignup = async (req, res) => {
   const email = req.body.email;
   const pass = req.body.pass;
   const cpwd = req.body.cpwd;
@@ -29,16 +49,27 @@ exports.postSingup = async (req, res) => {
     const existingUser = await User.FindByEmail(email);
     if (existingUser) {
       console.log("user already existed");
-      res.render("auth/auth", {
+      res.render("auth/signup", {
         docTitle: "SignUp",
         error: true,
+        msg: "User with this email Already Existed",
         path: "/login",
+        values: [email, pass, cpwd],
       });
     } else {
-      const user = new User(email, pass);
+      const cryptPass = await bcrypt.hash(pass, 12);
+      const user = new User(email, cryptPass);
       await user.save();
       res.redirect("/login");
     }
+  } else {
+    res.render("auth/signup", {
+      docTitle: "SignUp",
+      error: true,
+      msg: "Password mis-matched check again",
+      path: "/login",
+      values: [email, pass, cpwd],
+    });
   }
 };
 
@@ -57,7 +88,7 @@ exports.postLogout = (req, res) => {
           console.error(err);
         }
         res.clearCookie("connect.sid");
-        res.redirect("/");
+        res.redirect("/login");
       });
     });
   } else {

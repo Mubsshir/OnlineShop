@@ -34,11 +34,11 @@ class User {
       console.log("Error : " + err);
     }
   }
-  static async FindById(id,result=true) {
+  static async FindById(id, result = true) {
     try {
       await connect();
       const request = await pool.request();
-      request.input("email",email)
+      request.input("email", email);
       request.input("id", id);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_FindUser");
@@ -49,10 +49,9 @@ class User {
       }
       if (rowAffected > 0) {
         console.log("User Find");
-        if(result){
+        if (result) {
           return result.recordset[0];
-        }
-        else{
+        } else {
           return true;
         }
       } else {
@@ -64,21 +63,38 @@ class User {
         console.log("Database connetion closed.");
       }
       console.log("Error : " + err);
-      if(result){
+      if (result) {
         return [];
-      }
-      else{
+      } else {
         return false;
       }
     }
   }
 
-  static async FindByEmail(email,result=false) {
+  static async fetchUserPass(email) {
     try {
       await connect();
       const request = await pool.request();
       request.input("email", email);
-      request.input("id",-1)
+      request.output("rowAffected", sql.Int);
+      const result = await request.execute("USP_GetUserInfo");
+      const rowAffected = result.output.rowAffected;
+      if (rowAffected > 0) {
+        return { result: result.recordset[0].password };
+      } else {
+        return { result: false };
+      }
+    } catch (err) {
+      console.log("Error while looking for user in database: " + err);
+      return { result: false };
+    }
+  }
+  static async FindByEmail(email, result = false) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input("email", email);
+      request.input("id", -1);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_FindUser");
       const rowAffected = result.output.rowAffected;
@@ -88,10 +104,9 @@ class User {
       }
       if (rowAffected > 0) {
         console.log("User Find");
-        if(result){
+        if (result) {
           return result.recordset[0];
-        }
-        else{
+        } else {
           return true;
         }
       } else {
@@ -103,10 +118,9 @@ class User {
         console.log("Database connetion closed.");
       }
       console.log("While Finding user by email : " + err);
-      if(result){
+      if (result) {
         return [];
-      }
-      else{
+      } else {
         return false;
       }
     }

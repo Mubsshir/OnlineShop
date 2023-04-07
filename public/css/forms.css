@@ -19,12 +19,6 @@
     outline-color: #00695c;
 }
 
-.form-control.login{
-    display: block;
-}
-.form-control.signup{   
-    display: none;
-}
 .login-form,.signUp-form {
     width: 20rem;
     max-width: 90%;
@@ -51,5 +45,4 @@
 .signUp-form .error{
     color: red;
     font-weight: 600;
-    display: none;
 }
