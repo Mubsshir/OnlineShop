@@ -24,13 +24,16 @@ exports.postLogin = async (req, res) => {
   if (isUser.result) {
     const isCorrectPass = await bcrypt.compare(pass, isUser.result);
     if(isCorrectPass){
+      console.log(isUser);
       req.session.isAuthenticate = true;
+      req.session.user=isUser.userID;
       req.session.save((err) => {
         if (!err) {
+          console.log(req.session)
           res.redirect("/");
         }
       });
-      
+      return;
     }
   }
   req.session.isAuthenticate = false;

@@ -2,8 +2,7 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 exports.postAddProduct = async (req, res, next) => {
   const { title, img, price, desc } = req.body;
-
-  const product = new Product(title, img, price, desc,req.user.UserID);
+  const product = new Product(title, img, price, desc,req.session.user  );
   const result = await product.saveProduct();
   res.render("admin/add-product", {
     docTitle: "Add Product",
@@ -14,7 +13,7 @@ exports.postAddProduct = async (req, res, next) => {
 };
 
 exports.getAdminProducts = async (req, res, next) => {
-  const result = await Product.fetchItems();
+  const result = await Product.fetchAdminProducts(req.session.user);
   res.render("admin/products", {
     docTitle: "Admin Products",
     path: "/admin/products",

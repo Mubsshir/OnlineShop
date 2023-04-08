@@ -80,7 +80,7 @@ class User {
       const result = await request.execute("USP_GetUserInfo");
       const rowAffected = result.output.rowAffected;
       if (rowAffected > 0) {
-        return { result: result.recordset[0].password };
+        return { result: result.recordset[0].password,userID:result.recordset[0].UserID};
       } else {
         return { result: false };
       }

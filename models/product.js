@@ -1,12 +1,12 @@
 const { pool, sql, connect } = require("../util/database");
 
 class Product {
-  constructor(title, imgUrl, price, description,userID) {
+  constructor(title, imgUrl, price, description, userID) {
     this.title = title;
     this.imgUrl = imgUrl;
     this.price = price;
     this.description = description;
-    this.userID=userID
+    this.userID = userID;
   }
 
   async saveProduct() {
@@ -17,7 +17,7 @@ class Product {
       request.input("price", this.price);
       request.input("desc", this.description);
       request.input("img", this.imgUrl);
-      request.input('uid',this.userID);
+      request.input("uid", this.userID);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_AddProduct");
       const rowAffected = result.output.rowAffected;
@@ -35,12 +35,34 @@ class Product {
     try {
       await connect();
       const request = await pool.request();
-      const result = await request.execute("USP_GetProuducts");
+      const result = await request.execute("USP_GetProducts");
       await pool.close();
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
       return { products: result.recordset, error: false };
+    } catch (err) {
+      console.log(err + " :while connecting to db");
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
+      return { products: [], error: true };
+    }
+  }
+  static async fetchAdminProducts(uid) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input("uid", uid);
+      request.output("rowAffected", sql.Int);
+      const result = await request.execute("USP_GetAdminProd");
+      const rowAffected = result.output.rowAffected;
+      await pool.close();
+      if (rowAffected > 0) {
+        return { products: result.recordset, error: false };
+      }
+      return { products: [], error: true };
     } catch (err) {
       console.log(err + " :while connecting to db");
       await pool.close();
@@ -97,7 +119,7 @@ class Product {
     }
   }
 
-  static async deleteItem(id,uid) {
+  static async deleteItem(id, uid) {
     try {
       await connect();
       const request = await pool.request();
