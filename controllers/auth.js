@@ -2,11 +2,14 @@ const User = require("../models/user");
 const { store } = require("../util/sessionStore");
 const bcrypt = require("bcryptjs");
 exports.getLogin = (req, res) => {
-  res.render("auth/auth", {
-    docTitle: "Login",
-    path: "/login",
-    isAuthenticate: req.session.isAuthenticate,
-  });
+  if (!req.session.isAuthenticate) {
+    return res.render("auth/auth", {
+      docTitle: "Login",
+      path: "/login",
+      isAuthenticate: req.session.isAuthenticate,
+    });
+  }
+  res.redirect('/')
 };
 exports.getSignup = (req, res) => {
   if (req.session.isAuthenticate) {
@@ -23,13 +26,13 @@ exports.postLogin = async (req, res) => {
   const isUser = await User.fetchUserPass(email);
   if (isUser.result) {
     const isCorrectPass = await bcrypt.compare(pass, isUser.result);
-    if(isCorrectPass){
+    if (isCorrectPass) {
       console.log(isUser);
       req.session.isAuthenticate = true;
-      req.session.user=isUser.userID;
+      req.session.user = isUser.userID;
       req.session.save((err) => {
         if (!err) {
-          console.log(req.session)
+          console.log(req.session);
           res.redirect("/");
         }
       });
@@ -37,11 +40,11 @@ exports.postLogin = async (req, res) => {
     }
   }
   req.session.isAuthenticate = false;
-    req.session.save((err) => {
-      if (!err) {
-        res.redirect("/login");
-      }
-    });
+  req.session.save((err) => {
+    if (!err) {
+      res.redirect("/login");
+    }
+  });
 };
 
 exports.postSignup = async (req, res) => {
@@ -77,11 +80,9 @@ exports.postSignup = async (req, res) => {
 };
 
 exports.postLogout = (req, res) => {
-  console.log("In post logout");
   const sessionId = req.session.id;
   console.log(sessionId);
   if (sessionId) {
-    console.log("Hello");
     store.destroy(sessionId, (err) => {
       if (err) {
         console.error(err);

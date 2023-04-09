@@ -51,8 +51,9 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = async (req, res) => {
-  const cartProducts = await Cart.getCartProducts();
-  const userid = req.user.UserID;
+  console.log("Fetching cart")
+  const userid = req.session.user;
+  const cartProducts = await Cart.getCartProducts(userid);
   res.render("shop/cart", {
     docTitle: "Your Cart",
     prods: cartProducts[0],
@@ -64,14 +65,13 @@ exports.getCart = async (req, res) => {
 };
 exports.postCart = async (req, res) => {
   const prodID = req.body.productID;
-  const uid = req.user.UserID;
+  const uid = req.session.user;
   await Cart.addProduct(parseInt(prodID), parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate: req.session.isAuthenticate;
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
-  const uid = req.user.UserID;
+  const uid = req.session.user;
   await Cart.deleteItemFromCart(id, parseInt(uid));
   res.redirect("/cart");
   isAuthenticate: req.session.isAuthenticate;
@@ -84,7 +84,7 @@ exports.getCheckout = (req, res) => {
   });
 };
 exports.getOrders = async (req, res) => {
-  const orders = await Cart.fetchOrders(req.user.UserID);
+  const orders = await Cart.fetchOrders(req.session.user);
   console.log(JSON.stringify(orders));
   res.render("shop/orders", {
     docTitle: "Your Orders",
@@ -95,7 +95,7 @@ exports.getOrders = async (req, res) => {
 };
 
 exports.postOrder = async (req, res) => {
-  const uid = req.body.userid;
+  const uid = req.session.user;
   await Cart.moveToOrder(uid);
   res.redirect("/orders");
 };
