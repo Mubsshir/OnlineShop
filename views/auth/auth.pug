@@ -4,6 +4,7 @@ block stylesheet
 block content
   main
     form.login-form(action="/login",method="POST")
+      input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
       if showMessage
         if (!status)
           .message.error
@@ -13,11 +14,11 @@ block content
             document.querySelector(".product-form .message").style.display='none';
           },5000)
       div.form-control.login#loginForm
-        label(for="email") Email
+        label(for="email") Email 
         input(type="email" ,name="email", id="email")
         label(for="password") Password
         input(type="password" ,name="pass", id="password")
         button.btn(type="submit") Login 
-        h3.signLink Don't have an Account? 
+        h3.signLink Don't have an Account?
           a.sign(href="/signup") SignUp 
           | Here !

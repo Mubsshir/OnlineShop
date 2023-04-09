@@ -26,6 +26,7 @@ html(lang="en")
               a(href="/admin/products"  class=(path==='/admin/products'?'active':'')) Admin Products 
             li.main-header__item.login
               form(action="/logout", method="post")
+                input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
                 input(type="hidden", name="")
                 button(type="submit" class=(path==='/logout'?'active':'')) Logout
           else

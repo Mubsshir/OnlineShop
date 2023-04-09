@@ -9,8 +9,7 @@ exports.getProducts = async (req, res, next) => {
     return res.render("shop/product-list", {
       prods: cachedProducts,
       docTitle: "All Products",
-      path: "/products",
-      isAuthenticate: req.session.isAuthenticate,
+      path: "/products"
     });
   }
   const result = await Product.fetchItems();
@@ -18,8 +17,7 @@ exports.getProducts = async (req, res, next) => {
     return res.render("shop/product-list", {
       docTitle: "All Products",
       path: "/products",
-      err: result.error,
-      isAuthenticate: req.session.isAuthenticate,
+      err: result.error
     });
   }
   cache.put(CACHE_KEY,result.products,  CACHE_TIME);
@@ -27,8 +25,7 @@ exports.getProducts = async (req, res, next) => {
     prods: result.products,
     docTitle: "All Products",
     path: "/products",
-    err: result.error,
-    isAuthenticate: req.session.isAuthenticate,
+    err: result.error
   });
 };
 
@@ -37,18 +34,19 @@ exports.getProduct = async (req, res) => {
   const product = await Product.FindByID(prodID);
   res.render("shop/product-detail", {
     product: product[0],
-    docTitle: "/products/" + product[0].ProductName,
-    isAuthenticate: req.session.isAuthenticate,
+    docTitle: "/products/" + product[0].ProductName
   });
 };
-exports.getIndex = (req, res, next) => {
-  console.log(req.session.isAuthenticate)
-  res.render("shop/index", {
-    docTitle: "Shop",
-    path: "/",
-    isAuthenticate: req.session.isAuthenticate,
-  });
-};
+  exports.getIndex = (req, res, next) => {
+
+    const csrfToken=res.locals.csrfToken;
+    console.log(csrfToken)
+    console.log(req.session)
+    res.render("shop/index", {
+      docTitle: "Shop",
+      path: "/"
+    });
+  };
 
 exports.getCart = async (req, res) => {
   console.log("Fetching cart")
@@ -60,7 +58,6 @@ exports.getCart = async (req, res) => {
     total: cartProducts[1][0].CartTotal,
     userId: userid,
     path: "/cart",
-    isAuthenticate: req.session.isAuthenticate,
   });
 };
 exports.postCart = async (req, res) => {
@@ -74,13 +71,11 @@ exports.deleteCart = async (req, res) => {
   const uid = req.session.user;
   await Cart.deleteItemFromCart(id, parseInt(uid));
   res.redirect("/cart");
-  isAuthenticate: req.session.isAuthenticate;
 };
 exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     docTitle: "Checkout",
-    path: "/checkout",
-    isAuthenticate: req.session.isAuthenticate,
+    path: "/checkout"
   });
 };
 exports.getOrders = async (req, res) => {
@@ -89,8 +84,7 @@ exports.getOrders = async (req, res) => {
   res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
-    orders: orders,
-    isAuthenticate: req.session.isAuthenticate,
+    orders: orders
   });
 };
 

@@ -23,7 +23,8 @@ block content
         h3.totalPrice 
           span.label Cart Total Price : 
           | $#{total}
-        form(action="/orders" ,method="POST") 
+        form(action="/orders" ,method="POST")
+          input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
           input(type="hidden",name="userid",value=userId)
           button.btn(type="submit") Checkout Now
 

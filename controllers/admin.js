@@ -7,8 +7,7 @@ exports.postAddProduct = async (req, res, next) => {
   res.render("admin/add-product", {
     docTitle: "Add Product",
     status: result.success,
-    showMessage: true,
-    isAuthenticate:req.session.isAuthenticate
+    showMessage: true
   });
 };
 
@@ -18,8 +17,7 @@ exports.getAdminProducts = async (req, res, next) => {
     docTitle: "Admin Products",
     path: "/admin/products",
     prods: result.products,
-    err: result.error,
-    isAuthenticate:req.session.isAuthenticate
+    err: result.error
   });
 };
 
@@ -27,8 +25,7 @@ exports.getAddProduct = (req, res) => {
   res.render("admin/add-product", {
     docTitle: "add product",
     path: "/admin/add-product",
-    showMessage: false,
-    isAuthenticate:req.session.isAuthenticate
+    showMessage: false
   });
 };
 
@@ -38,8 +35,7 @@ exports.getEditProduct = async (req, res) => {
   console.log(product[0]);
   res.render("admin/edit-product", {
     docTitle: "Edit Product",
-    prod: product[0],
-    isAuthenticate:req.session.isAuthenticate
+    prod: product[0]
   });
 };
 exports.postEditProduct = async (req, res) => {
