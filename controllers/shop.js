@@ -13,6 +13,7 @@ exports.getProducts = async (req, res, next) => {
     });
   }
   const result = await Product.fetchItems();
+  console.log(result);
   if(result.error){
     return res.render("shop/product-list", {
       docTitle: "All Products",
@@ -38,10 +39,7 @@ exports.getProduct = async (req, res) => {
   });
 };
   exports.getIndex = (req, res, next) => {
-
     const csrfToken=res.locals.csrfToken;
-    console.log(csrfToken)
-    console.log(req.session)
     res.render("shop/index", {
       docTitle: "Shop",
       path: "/"

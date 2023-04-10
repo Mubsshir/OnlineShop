@@ -16,6 +16,7 @@ block content
           .productTotal 
             h3.price $#{product.ProductTotal}
             form(action="/delete-cart",method="POST" )
+              input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
               input(type="hidden" ,name="id" ,value=product.CartID)
               button.Pbtn(type="submit") Delete
     section.container

@@ -6,7 +6,7 @@ const { DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(config.database, config.user, config.password, {
   host: "localhost",
-  port: 1433,
+  port: 1433, 
   dialect: "mssql",
   dialectOptions: {
     options: {

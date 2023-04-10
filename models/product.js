@@ -40,6 +40,7 @@ class Product {
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
+      console.log(result.recordset)
       return { products: result.recordset, error: false };
     } catch (err) {
       console.log(err + " :while connecting to db");
