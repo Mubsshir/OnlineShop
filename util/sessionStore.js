@@ -5,12 +5,11 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(config.database, config.user, config.password, {
-  host: "sql.bsite.net",
+  host: "localhost",
   port: 1433,
   dialect: "mssql",
   dialectOptions: {
     options: {
-      instanceName: "MSSQL2016",
       encrypt: true,
     },
   },
