@@ -1,8 +1,8 @@
 const sql = require("mssql");
 
 const config = {
-  server: 'localhost',
-  database: "master",
+  server: 'MUBASSHIR-PC',
+  database: "mubsshir_shop",
   user: "mubsshir",
   password: "112233",
   port: 1433,
@@ -15,6 +15,7 @@ const config = {
     idleTimeoutMillis: 30000,
   },
 };
+
 
 const pool = new sql.ConnectionPool(config);
 

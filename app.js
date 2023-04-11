@@ -6,7 +6,7 @@ const shopRoutes = require("./routes/shop/shop");
 const authRoutes = require("./routes/auth");
 const route404 = require("./routes/404");
 const csrf=require('csurf');
-
+const flash=require('connect-flash');
 const app = express();
 const {store,session}=require('./util/sessionStore')
 
@@ -19,13 +19,14 @@ app.set("view engine", "pug");
 store.sync()
 app.use(
   session({
-    secret: "hello",
+    secret: "hello",  
     resave: false,
     saveUninitialized: false,
     store:store,
   })
 );
 
+app.use(flash());
 
 // set request body parser
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -3,12 +3,13 @@ const { store } = require("../util/sessionStore");
 const bcrypt = require("bcryptjs");
 exports.getLogin = (req, res) => {
   if (!req.session.isAuthenticate) {
+    loginError=req.flash('error')[0];
     return res.render("auth/auth", {
       docTitle: "Login",
       path: "/login",
-      isAuthenticate: req.session.isAuthenticate,
+      loginError
     });
-  }
+  } 
   res.redirect('/')
 };
 exports.getSignup = (req, res) => {
@@ -32,7 +33,6 @@ exports.postLogin = async (req, res) => {
       req.session.user = isUser.userID;
       req.session.save((err) => {
         if (!err) {
-          console.log(req.session);
           res.redirect("/");
         }
       });
@@ -42,6 +42,7 @@ exports.postLogin = async (req, res) => {
   req.session.isAuthenticate = false;
   req.session.save((err) => {
     if (!err) {
+      req.flash('error','Invalid Email/Password')
       res.redirect("/login");
     }
   });

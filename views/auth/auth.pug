@@ -4,15 +4,17 @@ block stylesheet
 block content
   main
     form.login-form(action="/login",method="POST")
+      if loginError
+        h3.error #{loginError}
       input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
-      if showMessage
-        if (!status)
-          .message.error
-            h3.error username/password incorrect
-        script. 
-          setTimeout(()=>{
-            document.querySelector(".product-form .message").style.display='none';
-          },5000)
+      //- if showMessage
+      //-   if (!status)
+      //-     .message.error
+      //-       h3.error username/password incorrect
+      //-   script. 
+      //-     setTimeout(()=>{
+      //-       document.querySelector(".product-form .message").style.display='none';
+      //-     },5000)
       div.form-control.login#loginForm
         label(for="email") Email 
         input(type="email" ,name="email", id="email")
