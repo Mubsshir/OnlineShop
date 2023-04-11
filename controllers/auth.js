@@ -1,6 +1,14 @@
 const User = require("../models/user");
 const { store } = require("../util/sessionStore");
 const bcrypt = require("bcryptjs");
+const nodeMailer=require('nodemailer');
+const sendGridTransport=require('nodemailer-sendgrid-transport');
+
+const transporter=nodeMailer.createTransport(sendGridTransport({
+  auth:{
+    api_key:"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"
+  }
+}))
 exports.getLogin = (req, res) => {
   if (!req.session.isAuthenticate) {
     loginError=req.flash('error')[0];
@@ -49,6 +57,12 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.postSignup = async (req, res) => {
+  transporter.sendMail({
+    to:'mmk3045@gmail.com',
+    from:'kmubsshir@hotmail.com',
+    subject: 'testing sendgrid mailing service',
+    html:'<h1>Hello My world</h2>'
+  })
   const email = req.body.email;
   const pass = req.body.pass;
   const cpwd = req.body.cpwd;
@@ -67,6 +81,8 @@ exports.postSignup = async (req, res) => {
       const cryptPass = await bcrypt.hash(pass, 12);
       const user = new User(email, cryptPass);
       await user.save();
+
+     
       res.redirect("/login");
     }
   } else {

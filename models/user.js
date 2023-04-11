@@ -13,7 +13,6 @@ class User {
       const request = await pool.request();
       request.input("email", this.email);
       request.input("pass", this.password);
-      console.log(this);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_SaveUser");
       const rowAffected = result.output.rowAffected;
