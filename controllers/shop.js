@@ -13,6 +13,7 @@ exports.getProducts = async (req, res, next) => {
     });
   }
   const result = await Product.fetchItems();
+  console.log(result);
   if(result.error){
     return res.render("shop/product-list", {
       docTitle: "All Products",

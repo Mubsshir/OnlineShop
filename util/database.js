@@ -1,9 +1,9 @@
 const sql = require("mssql");
 
 const config = {
-  server: 'sql.bsite.net\\MSSQL2016',
-  database: "mubsshir_shop",
-  user: "mubsshir_shop",
+  server: 'localhost',
+  database: "master",
+  user: "mubsshir",
   password: "112233",
   port: 1433,
   options: {
