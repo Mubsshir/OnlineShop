@@ -38,10 +38,7 @@ exports.getProduct = async (req, res) => {
   });
 };
   exports.getIndex = (req, res, next) => {
-
     const csrfToken=res.locals.csrfToken;
-    console.log(csrfToken)
-    console.log(req.session)
     res.render("shop/index", {
       docTitle: "Shop",
       path: "/"
