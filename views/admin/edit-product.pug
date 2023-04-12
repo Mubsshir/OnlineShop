@@ -5,6 +5,9 @@ block stylesheet
 block content
   main
     form.product-form(action="/admin/edit-product/",method="POST")
+      if updateMsg
+        h3.success #{updateMsg}
+      input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
       div.form-control
         input(type="hidden" ,name="id",value=prod.ProductTblRefID)
         label(for="title") Title

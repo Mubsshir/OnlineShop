@@ -37,6 +37,17 @@
   color: red;
 }
 
+.succes{
+  font-weight: 500;
+  color: #055e05;
+  border: 1px solid #055e05;
+  padding: 2px 5px;
+  margin: 0 auto;
+  width: 95vw;
+  background: #bdf8bd;
+  font-weight: 600;
+}
+
 .product-form .message {
   padding: 3px;
 }
