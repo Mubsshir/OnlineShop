@@ -1,16 +1,20 @@
 const User = require("../models/user");
 const { store } = require("../util/sessionStore");
 const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator/check");
+
 exports.getLogin = (req, res) => {
   if (!req.session.isAuthenticate) {
-    loginError=req.flash('error')[0];
+    loginError = req.flash("error")[0];
+    signupSuccess = req.flash("success")[0];
     return res.render("auth/auth", {
       docTitle: "Login",
       path: "/login",
-      loginError
+      loginError,
+      signupSuccess,
     });
-  } 
-  res.redirect('/')
+  }
+  res.redirect("/");
 };
 exports.getSignup = (req, res) => {
   if (req.session.isAuthenticate) {
@@ -42,7 +46,7 @@ exports.postLogin = async (req, res) => {
   req.session.isAuthenticate = false;
   req.session.save((err) => {
     if (!err) {
-      req.flash('error','Invalid Email/Password')
+      req.flash("error", "Invalid Email/Password");
       res.redirect("/login");
     }
   });
@@ -52,6 +56,17 @@ exports.postSignup = async (req, res) => {
   const email = req.body.email;
   const pass = req.body.pass;
   const cpwd = req.body.cpwd;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const err=errors.array();
+    return res.status(422).render("auth/signup", {
+      docTitle: "SignUp",
+      error: true,
+      msg: err[0].msg,
+      path: "/login",
+      values: [email, pass, cpwd],
+    });
+  }
   if (pass === cpwd) {
     const existingUser = await User.FindByEmail(email);
     if (existingUser) {
@@ -65,8 +80,9 @@ exports.postSignup = async (req, res) => {
       });
     } else {
       const cryptPass = await bcrypt.hash(pass, 12);
-      const user = new User(email, cryptPass);
-      await user.save();
+      //const user = new User(email, cryptPass);
+      //await user.save();
+      req.flash("success", "User Created");
       res.redirect("/login");
     }
   } else {

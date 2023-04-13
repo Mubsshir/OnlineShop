@@ -19,6 +19,7 @@ exports.getAdminProducts = async (req, res, next) => {
     path: "/admin/products",
     prods: result.products,
     err: result.error,
+    msg:result.msg,
     deleteMsg
   });
 };

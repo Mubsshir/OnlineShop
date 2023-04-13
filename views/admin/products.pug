@@ -3,9 +3,10 @@ block stylesheet
   link(rel="stylesheet", href="/css/product.css")
 block content
   main
-    if err 
-      .error 
-        h3 Error occure while fetching products from backend.
+    if err=='failed'
+      h3.error #{msg}
+    else if err=='success'
+      h3.success #{msg}
     else 
       if prods.length>0
         .grid

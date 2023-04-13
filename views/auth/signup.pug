@@ -3,7 +3,7 @@ block stylesheet
   link(rel="stylesheet",href="/css/forms.css")
 block content
   main
-    form.signUp-form(action="/signup",method="POST")
+    form.signUp-form(action="/signup",method="POST",novalidate)
       input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
       if error 
         h3.error #{msg}
