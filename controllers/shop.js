@@ -21,7 +21,7 @@ exports.getProducts = async (req, res, next) => {
       err: result.error
     });
   }
-  cache.put(CACHE_KEY,result.products,  CACHE_TIME);
+  cache.put(CACHE_KEY,result.products,  CACHE_TIME);  
   res.render("shop/product-list", {
     prods: result.products,
     docTitle: "All Products",

@@ -6,6 +6,8 @@ block content
     form.login-form(action="/login",method="POST")
       if loginError
         h3.error #{loginError}
+      if signupSuccess
+        h3.success #{signupSuccess}
       input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
       //- if showMessage
       //-   if (!status)
@@ -24,3 +26,6 @@ block content
         h3.signLink Don't have an Account?
           a.sign(href="/signup") SignUp 
           | Here !
+        h3.signLink Forget Password 
+          a.sign(href="/reset") Reset 
+          | Now !

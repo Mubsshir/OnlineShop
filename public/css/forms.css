@@ -50,3 +50,13 @@
     background-color: rgb(248, 209, 209);
     font-size: 15px;
 }
+.login-form .success{
+    font-weight: 600;
+    color: #055e05;
+    border: 1px solid #055e05;
+    padding: 2px 5px;
+    margin: 0 auto;
+    background: #bdf8bd;
+    text-align: center;
+    font-size: 16px;
+}

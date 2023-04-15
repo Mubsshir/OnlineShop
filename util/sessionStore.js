@@ -14,6 +14,7 @@ const sequelize = new Sequelize(config.database, config.user, config.password, {
       trustedConnection: true
     },
   },
+  logging:false
 });
 sequelize
   .authenticate()

@@ -3,12 +3,15 @@ block stylesheet
   link(rel="stylesheet", href="/css/product.css")
 block content
   main
-    if err 
-      .error 
-        h3 Error occure while fetching products from backend.
+    if err=='failed'
+      h3.error #{msg}
+    else if err=='success'
+      h3.success #{msg}
     else 
       if prods.length>0
         .grid
+          if deleteMsg
+            h3.succes #{deleteMsg}
           each product in prods
             article.card.product-item
               header.card__header 
@@ -21,8 +24,10 @@ block content
                 p.product__description #{product.ProductDesc}
               .card__actions
                 form(action="/admin/edit-product/"+product.ProductTblRefID,method="GET")
+                  input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
                   button.btn(type="submit") Edit
                 form(action="/admin/delete-product",method="POST")
+                  input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
                   input(type="hidden",name="id" ,value=product.ProductTblRefID)
                   button.btn(type="submit") Delete
       else

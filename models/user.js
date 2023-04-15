@@ -79,7 +79,10 @@ class User {
       const result = await request.execute("USP_GetUserInfo");
       const rowAffected = result.output.rowAffected;
       if (rowAffected > 0) {
-        return { result: result.recordset[0].password,userID:result.recordset[0].UserID};
+        return {
+          result: result.recordset[0].password,
+          userID: result.recordset[0].UserID,
+        };
       } else {
         return { result: false };
       }
@@ -102,8 +105,7 @@ class User {
         console.log("Database connetion closed.");
       }
       if (rowAffected > 0) {
-        console.log("User Find");
-        if (result) {
+        if (result == true) {
           return result.recordset[0];
         } else {
           return true;
@@ -117,11 +119,74 @@ class User {
         console.log("Database connetion closed.");
       }
       console.log("While Finding user by email : " + err);
-      if (result) {
+      if (result == true) {
         return [];
       } else {
         return false;
       }
+    }
+  }
+
+  static async SaveResetToken(email, token, expireTime) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input("email", email);
+      request.input("token", token);
+      request.input("expire", expireTime);
+      request.output("rowAffected", sql.Int);
+      const result = await request.execute("USP_InsertResetToken");
+      const rowAffected = result.output.rowAffected;
+      if (rowAffected > 0) {
+        console.log("Token Set");
+        return true;
+      } else {
+        throw new Error("Somthing went wrong when inserting token");
+      }
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  }
+  static async FindByToken(token,expireTime) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input("token", token);
+      request.input("expire", expireTime);
+      request.output("rowAffected", sql.Int);
+      const result = await request.execute("USP_FindUserWithToken");
+      const rowAffected = result.output.rowAffected;
+      if (rowAffected > 0) {
+        return result.recordset;
+      } else {
+        throw new Error("No user find with this token");
+      }
+    } catch (err) {
+      console.log("Error : "+ err);
+      return [ ]; 
+    }
+  }
+  static async ResetPassword(uid,token,expireTime,pass) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input('uid',uid);
+      request.input("token", token);
+      request.input("expire", expireTime);
+      request.input('pass',pass);
+      request.output("rowAffected", sql.Int);
+      const result = await request.execute("USP_ResetUserPassword");
+      const rowAffected = result.output.rowAffected;
+      if (rowAffected > 0) {
+        console.log("Password reset")
+        return true;
+      } else {
+        throw new Error("Unable to reset the password , Token may be expired");
+      }
+    } catch (err) {
+      console.log("Error : "+ err);
+      return false;
     }
   }
 }

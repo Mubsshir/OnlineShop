@@ -63,14 +63,14 @@ class Product {
       if (rowAffected > 0) {
         return { products: result.recordset, error: false };
       }
-      return { products: [], error: true };
+      return { products: [], error: 'success',msg:"You did not add any product yet" };
     } catch (err) {
       console.log(err + " :while connecting to db");
       await pool.close();
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
-      return { products: [], error: true };
+      return { products: [], error: 'failed',msg:"Error while fetiching data, contact Administrator" };
     }
   }
 

@@ -1,0 +1,16 @@
+extends ../layouts/main.pug
+block stylesheet
+  link(rel="stylesheet",href="/css/forms.css")
+block content
+  main
+    form.login-form(action="/reset",method="POST")
+      if inValidEmail
+        h3.error #{inValidEmail}
+      if validEmail
+        h3.success #{validEmail}
+      input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
+      div.form-control.login#loginForm
+        label(for="email") Email 
+        input(type="email" ,name="email", id="email")
+        button.btn(type="submit") Reset Password 
+        
