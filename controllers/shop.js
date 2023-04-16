@@ -1,36 +1,36 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
-const cache=require('memory-cache');
-const CACHE_KEY='products';
-const CACHE_TIME=5*60*1000;
+const cache = require("memory-cache");
+const CACHE_KEY = "products";
+const CACHE_TIME = 5 * 60 * 1000;
 exports.getProducts = async (req, res, next) => {
-  const cachedProducts=cache.get(CACHE_KEY);
-  const successMsg=req.flash('success')[0];
-  if(cachedProducts){
+  const cachedProducts = cache.get(CACHE_KEY);
+  const successMsg = req.flash("success")[0];
+  if (cachedProducts) {
     return res.render("shop/product-list", {
       prods: cachedProducts,
       docTitle: "All Products",
       path: "/products",
-      successMsg
+      successMsg,
     });
   }
   const result = await Product.fetchItems();
   console.log(result);
-  if(result.error){
+  if (result.error) {
     return res.render("shop/product-list", {
       docTitle: "All Products",
       path: "/products",
       err: result.error,
-      successMsg
+      successMsg,
     });
   }
-  cache.put(CACHE_KEY,result.products,  CACHE_TIME);  
+  cache.put(CACHE_KEY, result.products, CACHE_TIME);
   res.render("shop/product-list", {
     prods: result.products,
     docTitle: "All Products",
     path: "/products",
     err: result.error,
-    successMsg
+    successMsg,
   });
 };
 
@@ -39,19 +39,19 @@ exports.getProduct = async (req, res) => {
   const product = await Product.FindByID(prodID);
   res.render("shop/product-detail", {
     product: product[0],
-    docTitle: "/products/" + product[0].ProductName,
+    docTitle:  product[0].ProductName,
   });
 };
-  exports.getIndex = (req, res, next) => {
-    const csrfToken=res.locals.csrfToken;
-    res.render("shop/index", {
-      docTitle: "Shop",
-      path: "/"
-    });
-  };
+exports.getIndex = (req, res, next) => {
+  const csrfToken = res.locals.csrfToken;
+  res.render("shop/index", {
+    docTitle: "Shop",
+    path: "/",
+  });
+};
 
 exports.getCart = async (req, res) => {
-  console.log("Fetching cart")
+  console.log("Fetching cart");
   const userid = req.session.user;
   const cartProducts = await Cart.getCartProducts(userid);
   res.render("shop/cart", {
@@ -66,7 +66,7 @@ exports.postCart = async (req, res) => {
   const prodID = req.body.productID;
   const uid = req.session.user;
   await Cart.addProduct(parseInt(prodID), parseInt(uid));
-  req.flash('success',"Product Added to cart");
+  req.flash("success", "Product Added to cart");
   res.redirect("products");
 };
 exports.deleteCart = async (req, res) => {
@@ -78,7 +78,7 @@ exports.deleteCart = async (req, res) => {
 exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     docTitle: "Checkout",
-    path: "/checkout"
+    path: "/checkout",
   });
 };
 exports.getOrders = async (req, res) => {
@@ -87,7 +87,7 @@ exports.getOrders = async (req, res) => {
   res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
-    orders: orders
+    orders: orders,
   });
 };
 

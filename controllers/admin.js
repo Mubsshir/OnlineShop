@@ -3,10 +3,10 @@ const Cart = require("../models/cart");
 exports.postAddProduct = async (req, res, next) => {
   const { title, price, desc } = req.body;
   const img = req.file;
-  let imgPath=null;
+  let imgPath = null;
   if (img) {
     imgPath = img.path;
-    console.log(img)
+    console.log(img);
   } else {
     //show error about image
     req.flash("error", "Invalid Image file");
@@ -14,11 +14,14 @@ exports.postAddProduct = async (req, res, next) => {
   }
   const product = new Product(title, imgPath, price, desc, req.session.user);
   const result = await product.saveProduct();
-  if (result===true) {
+  if (result === true) {
     req.flash("success", "Product added succesfully");
     res.redirect("/admin/add-product");
-  }else{
-    req.flash("error", "Error while saving product, please contact Administrator");
+  } else {
+    req.flash(
+      "error",
+      "Error while saving product, please contact Administrator"
+    );
     res.redirect("/admin/add-product");
   }
 };
@@ -33,7 +36,7 @@ exports.getAdminProducts = async (req, res, next) => {
     prods: result.products,
     msg: result.msg,
     errorMsg,
-    successMsg
+    successMsg,
   });
 };
 
@@ -59,11 +62,11 @@ exports.getEditProduct = async (req, res) => {
   });
 };
 exports.postEditProduct = async (req, res) => {
-  const {id,title,price,description}=req.body;
-  const img=req.file.path;
-  console.log(img)
-  console.log(req.body)
-  await Product.editProduct(id,title,price,description,img);
+  const { id, title, price, description } = req.body;
+  const img = req.file.path;
+  console.log(img);
+  console.log(req.body);
+  await Product.editProduct(id, title, price, description, img);
   req.flash("success", "Product Updated");
   res.redirect("/admin/products");
 };
