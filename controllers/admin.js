@@ -59,7 +59,11 @@ exports.getEditProduct = async (req, res) => {
   });
 };
 exports.postEditProduct = async (req, res) => {
-  await Product.editProduct(req.body);
+  const {id,title,price,description}=req.body;
+  const img=req.file.path;
+  console.log(img)
+  console.log(req.body)
+  await Product.editProduct(id,title,price,description,img);
   req.flash("success", "Product Updated");
   res.redirect("/admin/products");
 };

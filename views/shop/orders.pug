@@ -16,4 +16,8 @@ block content
                 .qtySec 
                   h3.qty Quantity : #{product.Qty} 
               .productTotal 
-                h3.price $#{product.Qty*product.ProductPrice}
+               h3.price $#{product.Qty*product.ProductPrice}
+          .totalPrice 
+            h3 Order Total: 
+              span.total $ #{order.total}
+            a.Pbtn(href="/invoice") Get Invoice

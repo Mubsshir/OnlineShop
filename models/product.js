@@ -1,3 +1,4 @@
+const { Int } = require("mssql");
 const { pool, sql, connect } = require("../util/database");
 
 class Product {
@@ -104,15 +105,15 @@ class Product {
       return {};
     }
   }
-  static async editProduct(product) {
+  static async editProduct(id,title,price,description,imgUrl) {
     try {
       await connect();
       const request = await pool.request();
-      request.input("id", product.id);
-      request.input("title", product.title);
-      request.input("price", product.price);
-      request.input("desc", product.description);
-      request.input("img", product.imgUrl);
+      request.input("id", parseInt(id));
+      request.input("title", title);
+      request.input("price", price);
+      request.input("desc", description);
+      request.input("img", imgUrl);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_UpdateProduct");
       const rowAffected = result.output.rowAffected;

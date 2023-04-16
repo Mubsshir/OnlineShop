@@ -8,18 +8,27 @@ block content
         h3 Error occure while fetching products from backend.
     else
       if prods.length>0
+        if successMsg
+          .message 
+            h3.success #{successMsg}
+        script. 
+          setTimeout(()=>{
+            document.querySelector(".message").style.display='none';
+          },3000)
         .grid
           each product in prods
             article.card.product-item
               header.card__header 
                 h1.product__title #{product.ProductName}
+            
               div.card__image
-                img(src=product.ProductImg, alt="A Book")
+                img(src="/"+product.ProductImg, alt="A Book")
               div.card__content
                 h2.product__price $#{product.ProductPrice}
                 p.product__description #{product.ProductDesc}
               .card__actions
                 form(action="/products/" + product.ProductTblRefID,method="POST")
+                  input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
                   button.btn(type="submit") Details
                 if isAuthenticate
                   include ../layouts/add-to-cart.pug

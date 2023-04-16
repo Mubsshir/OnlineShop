@@ -4,7 +4,7 @@ block stylesheet
   link(rel="stylesheet", href="/css/product.css")
 block content
   main
-    form.product-form(action="/admin/edit-product/",method="POST")
+    form.product-form(action="/admin/edit-product/",method="POST" ,enctype="multipart/form-data")
       if updateMsg
         .message 
           h3.success #{updateMsg}
@@ -13,8 +13,8 @@ block content
         input(type="hidden" ,name="id",value=prod.ProductTblRefID)
         label(for="title") Title
         input(type="text" ,name="title", id="title",value=prod.ProductName)
-        label(for="img") Product Image Url
-        input(type="text" ,name="imgUrl", id="img",value=prod.ProductImg)
+        label(for="img") Upload Product Image #{"(type: png,jpg,jpeg)"}
+        input(type="file",accept=".jpg,.jpeg,.png,.webp" ,name="img", id="img")
         label(for="price") Price
         input(type="number" ,name="price", id="price",value=prod.ProductPrice)
         label(for="desc") Description

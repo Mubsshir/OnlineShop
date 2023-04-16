@@ -5,11 +5,13 @@ const CACHE_KEY='products';
 const CACHE_TIME=5*60*1000;
 exports.getProducts = async (req, res, next) => {
   const cachedProducts=cache.get(CACHE_KEY);
+  const successMsg=req.flash('success')[0];
   if(cachedProducts){
     return res.render("shop/product-list", {
       prods: cachedProducts,
       docTitle: "All Products",
-      path: "/products"
+      path: "/products",
+      successMsg
     });
   }
   const result = await Product.fetchItems();
@@ -18,7 +20,8 @@ exports.getProducts = async (req, res, next) => {
     return res.render("shop/product-list", {
       docTitle: "All Products",
       path: "/products",
-      err: result.error
+      err: result.error,
+      successMsg
     });
   }
   cache.put(CACHE_KEY,result.products,  CACHE_TIME);  
@@ -26,7 +29,8 @@ exports.getProducts = async (req, res, next) => {
     prods: result.products,
     docTitle: "All Products",
     path: "/products",
-    err: result.error
+    err: result.error,
+    successMsg
   });
 };
 
@@ -35,7 +39,7 @@ exports.getProduct = async (req, res) => {
   const product = await Product.FindByID(prodID);
   res.render("shop/product-detail", {
     product: product[0],
-    docTitle: "/products/" + product[0].ProductName
+    docTitle: "/products/" + product[0].ProductName,
   });
 };
   exports.getIndex = (req, res, next) => {
@@ -62,7 +66,8 @@ exports.postCart = async (req, res) => {
   const prodID = req.body.productID;
   const uid = req.session.user;
   await Cart.addProduct(parseInt(prodID), parseInt(uid));
-  res.redirect("/cart");
+  req.flash('success',"Product Added to cart");
+  res.redirect("products");
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
