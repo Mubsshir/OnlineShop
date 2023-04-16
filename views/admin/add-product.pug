@@ -5,26 +5,25 @@ block stylesheet
 
 block content     
   main
-    form.product-form(action="/admin/add-product",method="POST")
+    form.product-form(action="/admin/add-product",method="POST",enctype="multipart/form-data")
       input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
-      if showMessage
-        if (status)
-          .message.success
-            h3.success Product Added Successfully 
-        else
-          .message.error
-            h3.error Somthing went wrong.Nothing added
-        script. 
-          setTimeout(()=>{
-            document.querySelector(".product-form .message").style.display='none';
-          },5000)
+      if (errorMsg)
+        .message 
+          h3.error  #{errorMsg}
+      if (successMsg) 
+        .message
+          h3.success #{successMsg}
+      script. 
+        setTimeout(()=>{
+          document.querySelector(".product-form .message").style.display='none';
+        },5000)
       div.form-control
         label(for="title") Title
         input(type="text" ,name="title", id="title")
-        label(for="img") Product Image Url
-        input(type="text" ,name="img", id="img")
+        label(for="img") Upload Product Image #{"(type: png,jpg,jpeg)"}
+        input(type="file",accept=".gif,.jpg,.jpeg,.png,.bmp,.webp" ,name="img", id="img")
         label(for="price") Price
         input(type="number" ,name="price", id="price")
         label(for="desc") Description
         textarea(cols="40", rows="4",name="desc", id="desc")
-      button.btn(type="submit") Add Product 
+      button.btn(type="submit") Add Product

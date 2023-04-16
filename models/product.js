@@ -22,13 +22,13 @@ class Product {
       const result = await request.execute("USP_AddProduct");
       const rowAffected = result.output.rowAffected;
       if (rowAffected > 0) {
-        return { success: true };
+        return true;
       } else {
         throw new Error("Product not saved in Database,Somthing went wrong");
       }
     } catch (err) {
       console.log(`error while saving product to database: ${err}`);
-      return { success: false };
+      return false;
     }
   }
   static async fetchItems() {
@@ -40,7 +40,7 @@ class Product {
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
-      console.log(result.recordset)
+      console.log(result.recordset);
       return { products: result.recordset, error: false };
     } catch (err) {
       console.log(err + " :while connecting to db");
@@ -63,14 +63,22 @@ class Product {
       if (rowAffected > 0) {
         return { products: result.recordset, error: false };
       }
-      return { products: [], error: 'success',msg:"You did not add any product yet" };
+      return {
+        products: [],
+        error: "success",
+        msg: "You did not add any product yet",
+      };
     } catch (err) {
       console.log(err + " :while connecting to db");
       await pool.close();
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
-      return { products: [], error: 'failed',msg:"Error while fetiching data, contact Administrator" };
+      return {
+        products: [],
+        error: "failed",
+        msg: "Error while fetiching data, contact Administrator",
+      };
     }
   }
 

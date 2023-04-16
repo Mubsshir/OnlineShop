@@ -26,6 +26,7 @@
     "memory-cache": "^0.2.0",
     "mssql": "^9.1.1",
     "mssql-session-store": "^1.0.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^3.0.2",

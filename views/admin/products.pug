@@ -3,6 +3,15 @@ block stylesheet
   link(rel="stylesheet", href="/css/product.css")
 block content
   main
+    .message 
+      if errorMsg
+        h3.error #{errorMsg}
+      if successMsg
+        h3.success #{successMsg}
+    script. 
+        setTimeout(()=>{
+          document.querySelector(".message").style.display='none';
+        },5000)
     if err=='failed'
       h3.error #{msg}
     else if err=='success'
@@ -10,15 +19,13 @@ block content
     else 
       if prods.length>0
         .grid
-          if deleteMsg
-            h3.succes #{deleteMsg}
           each product in prods
             article.card.product-item
               header.card__header 
                 h1.product__title #{product.ProductName}
             
               div.card__image
-                img(src=product.ProductImg, alt="A Book")
+                img(src="/"+product.ProductImg, alt="A Book")
               div.card__content
                 h2.product__price $#{product.ProductPrice}
                 p.product__description #{product.ProductDesc}

@@ -5,13 +5,12 @@ const { validationResult } = require("express-validator/check");
 const nodeMailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 const crypto = require("crypto");
-const exp = require("constants");
 
 const transporter = nodeMailer.createTransport(
   sendGridTransport({
     auth: {
       api_key:
-        "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",
+        "My Key",
     },
   })
 );
@@ -157,8 +156,10 @@ exports.postReset = async (req, res) => {
         expireTime.toString()
       );
       if (isTokenInserted === true) {
+        console.log("Sending Mail to : "+email)
+        console.log("http://localhost:3000/reset/"+token)
         //send mail
-        transporter.sendMail({
+        await transporter.sendMail({
           to: email,
           from: "kmubsshir@hotmail.com",
           subject: "Reset Password Khan Shop",
