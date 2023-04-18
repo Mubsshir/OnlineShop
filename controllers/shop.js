@@ -3,8 +3,9 @@ const Cart = require("../models/cart");
 const cache = require("memory-cache");
 const CACHE_KEY = "products";
 const CACHE_TIME = 5 * 60 * 1000;
-const path=require('../util/path');
-const fs=require('fs')
+const path = require("../util/path");
+const fs = require("fs");
+const PdfDocument = require("pdfkit");
 exports.getProducts = async (req, res, next) => {
   const cachedProducts = cache.get(CACHE_KEY);
   const successMsg = req.flash("success")[0];
@@ -40,7 +41,7 @@ exports.getProduct = async (req, res) => {
   const product = await Product.FindByID(prodID);
   res.render("shop/product-detail", {
     product: product[0],
-    docTitle:  product[0].ProductName,
+    docTitle: product[0].ProductName,
   });
 };
 exports.getIndex = (req, res, next) => {
@@ -87,7 +88,7 @@ exports.getOrders = async (req, res) => {
   return res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
-    orders
+    orders,
   });
 };
 
@@ -97,18 +98,20 @@ exports.postOrder = async (req, res) => {
   res.redirect("/orders");
 };
 
-
-exports.getInvoice=(req,res)=>{
-  const uid=req.params.uid;
-  const oid=req.params.oid;
-  const fileLoc=path+'/images/hello.png';
-  if(uid==req.session.user){
-    fs.readFile(fileLoc,(err,data)=>{
-      if(!err){
-        return res.send(data)
-      }
-    })
-    
+exports.getInvoice = (req, res) => {
+  const uid = parseInt(req.params.uid);
+  const oid = req.params.oid;
+  let fileName="invoice_" + oid + ".pdf";
+  const fileLoc = path + "\\images\\invoice\\"+fileName;
+  if (uid === req.session.user) {
+    const invoice = new PdfDocument();
+    invoice.pipe(fs.createWriteStream(fileLoc));
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'inline; filename="'+fileName+'"');
+    invoice.pipe(res);
+    invoice.text("hello world")
+    invoice.end()
+  } else {
+    res.redirect("/login");
   }
-  res.redirect('/orders')
-}
+};

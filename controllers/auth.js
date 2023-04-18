@@ -5,19 +5,21 @@ const { validationResult } = require("express-validator/check");
 const nodeMailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 const crypto = require("crypto");
+const API_KEY=require('../keys/sendgrid')
 
 const transporter = nodeMailer.createTransport(
   sendGridTransport({
     auth: {
       api_key:
-        "My Key",
-    },
+      API_KEY
+    }
   })
 );
 exports.getLogin = (req, res) => {
   if (!req.session.isAuthenticate) {
     loginError = req.flash("error")[0];
     signupSuccess = req.flash("success")[0];
+    console.log(loginError)
     return res.render("auth/auth", {
       docTitle: "Login",
       path: "/login",
