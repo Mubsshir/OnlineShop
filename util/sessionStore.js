@@ -5,7 +5,7 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(config.database, config.user, config.password, {
-  host: "MUBASSHIR-PC",
+  host: "localhost",
   port: 1433, 
   dialect: "mssql",
   dialectOptions: {

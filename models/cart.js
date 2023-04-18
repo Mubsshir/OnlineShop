@@ -1,5 +1,5 @@
 const { sql, pool, connect } = require("../util/database");
-
+const crypto=require('crypto');
 class Cart {
   static async addProduct(id, uid) {
     try {
@@ -79,8 +79,10 @@ class Cart {
   }
   static async moveToOrder(uid) {
     try {
+      const oid=crypto.randomUUID();
       await connect();
       const request = await pool.request();
+      request.input('orderID',oid);
       request.input("uid", uid);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_MoveToOrder");
@@ -104,29 +106,34 @@ class Cart {
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_GetOrders");
       const rowAffected = result.output.rowAffected;
-      console.log(result.recordsets+" "+uid)
-      console.log("In fetching order");
-      console.log(rowAffected);
       if (rowAffected === 0) {
         return [];
-      }
-      const ordersByDate = {};
+      } 
+      const ordersByID = {};
       result.recordsets[0].forEach((order) => {
-        const orderDate = new Date(order["Order Date"]).toISOString().slice(0, 10);
-        ordersByDate[orderDate] = ordersByDate[orderDate] || [];
-        ordersByDate[orderDate].push(order);
+        const OrderID = order["OrderID"]
+        const ODate = order["Date"]
+        ordersByID[OrderID] = ordersByID[OrderID] || {};
+        if(!ordersByID[OrderID].Date){
+          ordersByID[OrderID].Date=ODate
+        }
+        if(!ordersByID[OrderID].Products){
+          ordersByID[OrderID].Products=[]
+        }
+        if(!ordersByID[OrderID].Total){
+          ordersByID[OrderID].Total=0
+        }
+        const orderDetails={"UID":order.UserId,"Product Name":order.ProductName,"Qty":order.Qty}
+        ordersByID[OrderID].Products.push(orderDetails)           
       });
-      const ordersTotalByDate = {};
-      result.recordsets[1].forEach((data) => {
-        const orderDate = new Date(data.OrderDate).toISOString().slice(0, 10);
-        ordersTotalByDate[orderDate] = data.Total;
-      });
-      const productsByDate = Object.entries(ordersByDate).map(([orderDate, orders]) => ({
-        order_date:orderDate,
-        products: orders.map((order) => ({ ...order, ["Order Date"]: orderDate })),
-        total: ordersTotalByDate[orderDate] || 0,
+      console.log(ordersByID)
+      const ordersTotalByOID = result.recordsets[1];
+      const productsByID = Object.entries(ordersByID).map(([OrderID, orders]) => ({
+        OrderID,
+        products: orders.map((order) => ({ ...order, ["OrderID"]: OrderID })),
+        total: ordersTotalByOID[OrderID] || 0,
       }));
-      return productsByDate;
+      return productsByID;
     } catch (err) {
       console.log("Error: " + err);
       return [];

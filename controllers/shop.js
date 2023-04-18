@@ -15,7 +15,6 @@ exports.getProducts = async (req, res, next) => {
     });
   }
   const result = await Product.fetchItems();
-  console.log(result);
   if (result.error) {
     return res.render("shop/product-list", {
       docTitle: "All Products",
@@ -83,7 +82,6 @@ exports.getCheckout = (req, res) => {
 };
 exports.getOrders = async (req, res) => {
   const orders = await Cart.fetchOrders(req.session.user);
-  console.log(JSON.stringify(orders));
   res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
