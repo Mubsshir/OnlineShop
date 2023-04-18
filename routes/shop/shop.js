@@ -12,4 +12,5 @@ router.get("/products", productController.getProducts);
 router.post("/products/:productID", productController.getProduct);
 router.get("/orders", isAuth, productController.getOrders);
 router.post("/orders", isAuth, productController.postOrder);
+router.get('/invoice/:uid/:oid',isAuth,productController.getInvoice)
 module.exports = router;

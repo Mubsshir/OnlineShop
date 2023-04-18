@@ -2,22 +2,27 @@ extends ../layouts/main.pug
 block stylesheet
   link(rel="stylesheet", href="/css/cart.css")
 block content
-  main.order  
-    if orders.length<1
+  main.order 
+    - const length=Object.keys(orders).length
+    if length<1
       h3 You haven't placed any order
     else
-      each order in orders
+      each order,index in orders
         section.container.order
-          h3.orderDate Order Date : #{order.order_date}
-          each product in order.products 
+          h3.orderDate Order ID : #{index}
+          each product in order.Products 
             article.product
               .productInfo
-                h3.title #{product.ProductName} 
+                h3.title #{product['Product Name']} 
                 .qtySec 
-                  h3.qty Quantity : #{product.Qty} 
+                  h3.qty Quantity : X #{product.Qty} 
               .productTotal 
                h3.price $#{product.Qty*product.ProductPrice}
           .totalPrice 
             h3 Order Total: 
-              span.total $ #{order.total}
-            a.Pbtn(href="/invoice/") Get Invoice
+              span.total $ #{order.Total}
+            a.Pbtn(href="/invoice/"+order.UID+"/"+index) Get Invoice
+          .orderDate 
+            h5 
+              span.date Order Date: 
+              | #{order.Date}

@@ -1,5 +1,5 @@
 const { sql, pool, connect } = require("../util/database");
-const crypto=require('crypto');
+const crypto = require("crypto");
 class Cart {
   static async addProduct(id, uid) {
     try {
@@ -32,7 +32,7 @@ class Cart {
     try {
       await connect();
       const request = await pool.request();
-      request.input('uid',uid);
+      request.input("uid", uid);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_GetCartItems");
       const rowAffected = result.output.rowAffected;
@@ -79,10 +79,10 @@ class Cart {
   }
   static async moveToOrder(uid) {
     try {
-      const oid=crypto.randomUUID();
+      const oid = crypto.randomUUID();
       await connect();
       const request = await pool.request();
-      request.input('orderID',oid);
+      request.input("orderID", oid);
       request.input("uid", uid);
       request.output("rowAffected", sql.Int);
       const result = await request.execute("USP_MoveToOrder");
@@ -97,7 +97,7 @@ class Cart {
       console.log("Error: " + err);
     }
   }
- 
+
   static async fetchOrders(uid) {
     try {
       await connect();
@@ -108,32 +108,46 @@ class Cart {
       const rowAffected = result.output.rowAffected;
       if (rowAffected === 0) {
         return [];
-      } 
+      }
       const ordersByID = {};
       result.recordsets[0].forEach((order) => {
-        const OrderID = order["OrderID"]
-        const ODate = order["Date"]
+        const OrderID = order["OrderID"];
+        const ODate = order["Date"];
         ordersByID[OrderID] = ordersByID[OrderID] || {};
-        if(!ordersByID[OrderID].Date){
-          ordersByID[OrderID].Date=ODate
+        if (!ordersByID[OrderID].Date) {
+          ordersByID[OrderID].Date = new Date(ODate)
+            .toISOString()
+            .substring(0, 10);
         }
-        if(!ordersByID[OrderID].Products){
-          ordersByID[OrderID].Products=[]
+        if (!ordersByID[OrderID].UID) {
+          ordersByID[OrderID].UID = order.UserId;
         }
-        if(!ordersByID[OrderID].Total){
-          ordersByID[OrderID].Total=0
+        if (!ordersByID[OrderID].Products) {
+          ordersByID[OrderID].Products = [];
         }
-        const orderDetails={"UID":order.UserId,"Product Name":order.ProductName,"Qty":order.Qty}
-        ordersByID[OrderID].Products.push(orderDetails)           
+        if (!ordersByID[OrderID].Total) {
+          ordersByID[OrderID].Total = 0;
+        }
+        const orderDetails = {
+          UID: order.UserId,
+          "Product Name": order.ProductName,
+          ProductPrice: order.ProductPrice,
+          Qty: order.Qty,
+        };
+        ordersByID[OrderID].Products.push(orderDetails);
       });
-      console.log(ordersByID)
       const ordersTotalByOID = result.recordsets[1];
-      const productsByID = Object.entries(ordersByID).map(([OrderID, orders]) => ({
-        OrderID,
-        products: orders.map((order) => ({ ...order, ["OrderID"]: OrderID })),
-        total: ordersTotalByOID[OrderID] || 0,
-      }));
-      return productsByID;
+
+      ordersTotalByOID.forEach((data) => {
+        Object.keys(ordersByID).forEach((key) => {
+          ordersTotalByOID.forEach((data) => {
+            if (key == data.OrderID) {
+              ordersByID[key].Total = data.Total;
+            }
+          });
+        });
+      });
+      return ordersByID;
     } catch (err) {
       console.log("Error: " + err);
       return [];

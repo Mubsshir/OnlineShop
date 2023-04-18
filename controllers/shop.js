@@ -3,6 +3,8 @@ const Cart = require("../models/cart");
 const cache = require("memory-cache");
 const CACHE_KEY = "products";
 const CACHE_TIME = 5 * 60 * 1000;
+const path=require('../util/path');
+const fs=require('fs')
 exports.getProducts = async (req, res, next) => {
   const cachedProducts = cache.get(CACHE_KEY);
   const successMsg = req.flash("success")[0];
@@ -82,10 +84,10 @@ exports.getCheckout = (req, res) => {
 };
 exports.getOrders = async (req, res) => {
   const orders = await Cart.fetchOrders(req.session.user);
-  res.render("shop/orders", {
+  return res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
-    orders: orders,
+    orders
   });
 };
 
@@ -94,3 +96,19 @@ exports.postOrder = async (req, res) => {
   await Cart.moveToOrder(uid);
   res.redirect("/orders");
 };
+
+
+exports.getInvoice=(req,res)=>{
+  const uid=req.params.uid;
+  const oid=req.params.oid;
+  const fileLoc=path+'/images/hello.png';
+  if(uid==req.session.user){
+    fs.readFile(fileLoc,(err,data)=>{
+      if(!err){
+        return res.send(data)
+      }
+    })
+    
+  }
+  res.redirect('/orders')
+}
