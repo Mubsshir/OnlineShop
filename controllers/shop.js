@@ -5,7 +5,7 @@ const CACHE_KEY = "products";
 const CACHE_TIME = 5 * 60 * 1000;
 const path = require("../util/path");
 const fs = require("fs");
-const PdfDocument = require("pdfkit");
+const pdfkit = require("pdfkit");
 exports.getProducts = async (req, res, next) => {
   const cachedProducts = cache.get(CACHE_KEY);
   const successMsg = req.flash("success")[0];
@@ -85,6 +85,7 @@ exports.getCheckout = (req, res) => {
 };
 exports.getOrders = async (req, res) => {
   const orders = await Cart.fetchOrders(req.session.user);
+  console.log(JSON.stringify(orders));
   return res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",
@@ -98,19 +99,67 @@ exports.postOrder = async (req, res) => {
   res.redirect("/orders");
 };
 
-exports.getInvoice = (req, res) => {
+exports.getInvoice = async (req, res) => {
   const uid = parseInt(req.params.uid);
   const oid = req.params.oid;
-  let fileName="invoice_" + oid + ".pdf";
-  const fileLoc = path + "\\images\\invoice\\"+fileName;
+  let fileName = "invoice_" + oid + ".pdf";
+  const fileLoc = path + "\\images\\invoice\\" + fileName;
   if (uid === req.session.user) {
-    const invoice = new PdfDocument();
-    invoice.pipe(fs.createWriteStream(fileLoc));
+    const orders = await Cart.fetchOrders(uid);
+    const order=orders[oid];
+    const doc = new pdfkit();
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'inline; filename="'+fileName+'"');
-    invoice.pipe(res);
-    invoice.text("hello world")
-    invoice.end()
+    res.setHeader("Content-Disposition", 'inline; filename="' + fileName + '"');
+    // Set up the font and font size for the document
+    doc.font("Helvetica-Bold");
+    doc.fontSize(14);
+
+    // Add a title to the document
+    doc.text("INVOICE", { align: "center" });
+
+    // Add a header section
+    doc.moveDown();
+    doc.text("Your Company Name", { align: "center" });
+    doc.text("Your Company Address", { align: "center" });
+    doc.text("Your Company Phone", { align: "center" });
+
+    // Add a section for customer information
+    doc.moveDown();
+    doc.text("Bill To:", { underline: true });
+
+    // Add a section for order information
+    doc.moveDown();
+    doc.text(`Order Date: ${order.Date}`);
+    doc.text(`Order ID: ${oid}`);
+
+    // Add a table with order details
+    doc.moveDown();
+    doc.font("Helvetica-Bold");
+    doc.text("Product Name", { width: 250 });
+    doc.text("Price", { width: 100, align: "right" });
+    doc.text("Quantity", { width: 100, align: "right" });
+    doc.text("Total", { width: 100, align: "right" });
+    doc.moveDown();
+    order.Products.forEach((product) => {
+      doc.text(product['Product Name'], { width: 250 });
+      doc.text(product.ProductPrice.toFixed(2), { width: 100, align: "right" });
+      doc.text(product.Qty.toString(), { width: 100, align: "right" });
+      doc.text((product.ProductPrice * product.Qty).toFixed(2), {
+        width: 100,
+        align: "right",
+      });
+      doc.moveDown();
+    });
+    doc.font("Helvetica");
+    // Add a section for the total
+    doc.font("Helvetica-Bold");
+    doc.text("Total:", { width: 350, align: "right" });
+    doc.text(order.Total.toFixed(2), { width: 100, align: "right" });
+
+    // End the document and close the stream
+    doc.end();
+    doc.pipe(fs.createWriteStream(fileLoc));
+    doc.pipe(res);
   } else {
     res.redirect("/login");
   }
