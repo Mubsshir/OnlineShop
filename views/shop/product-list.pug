@@ -32,6 +32,9 @@ block content
                   button.btn(type="submit") Details
                 if isAuthenticate
                   include ../layouts/add-to-cart.pug
+        .pageBtn
+          each num in Array.from({length: perPageview}, (_, i) => i + 1)
+            button.pageBtn(type="button") #{num}
       else
         h1 Shop is empty
 

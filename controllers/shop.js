@@ -2,11 +2,16 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 const cache = require("memory-cache");
 const CACHE_KEY = "products";
-const CACHE_TIME = 5 * 60 * 1000;
+const CACHE_TIME = 1 * 60 * 1000;
 const path = require("../util/path");
 const fs = require("fs");
 const pdfkit = require("pdfkit");
 exports.getProducts = async (req, res, next) => {
+  const page=req.query.page;
+  const countInfo=await Product.getProductsCount();
+  console.log(countInfo)
+  const productCount=countInfo.ProductsCount;
+  const perPageview=countInfo.ProductPerPage;
   const cachedProducts = cache.get(CACHE_KEY);
   const successMsg = req.flash("success")[0];
   if (cachedProducts) {
@@ -17,7 +22,7 @@ exports.getProducts = async (req, res, next) => {
       successMsg,
     });
   }
-  const result = await Product.fetchItems();
+  const result = await Product.fetchItems((page-1)*3);
   if (result.error) {
     return res.render("shop/product-list", {
       docTitle: "All Products",
@@ -27,9 +32,11 @@ exports.getProducts = async (req, res, next) => {
     });
   }
   cache.put(CACHE_KEY, result.products, CACHE_TIME);
-  res.render("shop/product-list", {
+  return res.render("shop/product-list", {
     prods: result.products,
     docTitle: "All Products",
+    count:productCount,
+    perPageview,
     path: "/products",
     err: result.error,
     successMsg,
@@ -39,14 +46,14 @@ exports.getProducts = async (req, res, next) => {
 exports.getProduct = async (req, res) => {
   const prodID = req.params.productID;
   const product = await Product.FindByID(prodID);
-  res.render("shop/product-detail", {
+  return res.render("shop/product-detail", {
     product: product[0],
     docTitle: product[0].ProductName,
   });
 };
 exports.getIndex = (req, res, next) => {
   const csrfToken = res.locals.csrfToken;
-  res.render("shop/index", {
+  return res.render("shop/index", {
     docTitle: "Shop",
     path: "/",
   });

@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
+const fileHelper = require("../util/fileHelper");
 exports.postAddProduct = async (req, res, next) => {
   const { title, price, desc } = req.body;
   const img = req.file;
@@ -63,9 +64,15 @@ exports.getEditProduct = async (req, res) => {
 };
 exports.postEditProduct = async (req, res) => {
   const { id, title, price, description } = req.body;
-  const img = req.file.path;
-  console.log(img);
-  console.log(req.body);
+  let img = req.file ? req.file.path : "";
+  const product = await Product.FindByID(id);
+  const oldImg = product[0].ProductImg;
+  if (img != "" || img) {
+    fileHelper.deleteFile(oldImg);
+  } else {
+    img = oldImg;
+  }
+
   await Product.editProduct(id, title, price, description, img);
   req.flash("success", "Product Updated");
   res.redirect("/admin/products");
@@ -73,7 +80,15 @@ exports.postEditProduct = async (req, res) => {
 exports.postDeleteProduct = async (req, res) => {
   const prodID = req.body.id;
   const uid = req.session.user;
-  await Product.deleteItem(prodID, uid);
-  req.flash("success", "Product Deleted");
-  res.redirect("/admin/products");
+  if (req.session.user == uid) {
+    const product = await Product.FindByID(prodID);
+    const img = product[0].ProductImg;
+    fileHelper.deleteFile(img);
+    await Product.deleteItem(prodID, uid);
+    req.flash("success", "Product Deleted");
+    res.redirect("/admin/products");
+  }else{
+    req.flash("error", "You are not the owner of this products.");
+    res.redirect("/admin/products");
+  }
 };

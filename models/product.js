@@ -32,19 +32,45 @@ class Product {
       return false;
     }
   }
-  static async fetchItems() {
+  static async getProductsCount() {
     try {
       await connect();
       const request = await pool.request();
+      request.output("rowAffected", sql.Int);
+   
+      const result = await request.execute("USP_GetProductCount");
+      const rowAffected = result.output.rowAffected;
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
+      if (rowAffected > 0) {
+        return  result.recordset[0];
+      } else {
+        throw new Error("Error While Fetching Count");
+      }
+    } catch (err) {
+      console.log(err + " :Somthing went wrong while fetching Product Count");
+      await pool.close();
+      if (!pool.connected) {
+        console.log("Database connetion closed.");
+      }
+      return null;
+    }
+  }
+  static async fetchItems(skip) {
+    try {
+      await connect();
+      const request = await pool.request();
+      request.input('offset',skip)
       const result = await request.execute("USP_GetProducts");
       await pool.close();
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
-      console.log(result.recordset);
       return { products: result.recordset, error: false };
     } catch (err) {
-      console.log(err + " :while connecting to db");
+      console.log(err);
       await pool.close();
       if (!pool.connected) {
         console.log("Database connetion closed.");
@@ -105,7 +131,7 @@ class Product {
       return {};
     }
   }
-  static async editProduct(id,title,price,description,imgUrl) {
+  static async editProduct(id, title, price, description, imgUrl) {
     try {
       await connect();
       const request = await pool.request();
@@ -142,6 +168,7 @@ class Product {
       if (!pool.connected) {
         console.log("Database connetion closed.");
       }
+      console.log(rowAffected);
       if (rowAffected > 0) {
         return { success: true };
       } else {
