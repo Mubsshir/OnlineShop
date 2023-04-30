@@ -77,18 +77,21 @@ exports.postEditProduct = async (req, res) => {
   req.flash("success", "Product Updated");
   res.redirect("/admin/products");
 };
-exports.postDeleteProduct = async (req, res) => {
-  const prodID = req.body.id;
-  const uid = req.session.user;
+exports.deleteProduct = async (req, res) => {
+  console.log("Deleting Product")
+  const prodID = req.params.id;
+  const uid = req.session.user; 
   if (req.session.user == uid) {
-    const product = await Product.FindByID(prodID);
-    const img = product[0].ProductImg;
-    fileHelper.deleteFile(img);
-    await Product.deleteItem(prodID, uid);
-    req.flash("success", "Product Deleted");
-    res.redirect("/admin/products");
-  }else{
-    req.flash("error", "You are not the owner of this products.");
-    res.redirect("/admin/products");
+    try {
+      const product = await Product.FindByID(prodID);
+      const img = product[0].ProductImg;
+      fileHelper.deleteFile(img);
+      await Product.deleteItem(prodID, uid);
+      res.status(200).json({ message: "Product Deleted" });
+    } catch (err) {
+      res.status(500).json({ message: "Somthing went wrong" });
+    }
+  } else {
+    res.status(500).json({ message: "You are not the owner of this product" });
   }
 };

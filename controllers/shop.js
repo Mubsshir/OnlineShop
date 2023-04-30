@@ -1,45 +1,38 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
-const cache = require("memory-cache");
-const CACHE_KEY = "products";
-const CACHE_TIME = 1 * 60 * 1000;
 const path = require("../util/path");
 const fs = require("fs");
 const pdfkit = require("pdfkit");
 exports.getProducts = async (req, res, next) => {
-  const page=req.query.page;
-  const countInfo=await Product.getProductsCount();
-  console.log(countInfo)
-  const productCount=countInfo.ProductsCount;
-  const perPageview=countInfo.ProductPerPage;
-  const cachedProducts = cache.get(CACHE_KEY);
+  const page = req.query.page;
+  const countInfo = await Product.getProductsCount();
+  console.log(countInfo);
+  const productCount = countInfo.ProductsCount;
+  const perPageview = countInfo.ProductPerPage;
+
   const successMsg = req.flash("success")[0];
-  if (cachedProducts) {
-    return res.render("shop/product-list", {
-      prods: cachedProducts,
-      docTitle: "All Products",
-      path: "/products",
-      successMsg,
-    });
-  }
-  const result = await Product.fetchItems((page-1)*3);
+
+  const result = await Product.fetchItems((page - 1) * 3);
   if (result.error) {
     return res.render("shop/product-list", {
       docTitle: "All Products",
-      path: "/products",
+      path: "/products?page="+page,
       err: result.error,
       successMsg,
+      count: productCount,
+      perPageview,
+      page,
     });
   }
-  cache.put(CACHE_KEY, result.products, CACHE_TIME);
   return res.render("shop/product-list", {
     prods: result.products,
     docTitle: "All Products",
-    count:productCount,
+    count: productCount,
     perPageview,
-    path: "/products",
+    path: "/products?page="+page,
     err: result.error,
     successMsg,
+    page,
   });
 };
 
@@ -113,7 +106,7 @@ exports.getInvoice = async (req, res) => {
   const fileLoc = path + "\\images\\invoice\\" + fileName;
   if (uid === req.session.user) {
     const orders = await Cart.fetchOrders(uid);
-    const order=orders[oid];
+    const order = orders[oid];
     const doc = new pdfkit();
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", 'inline; filename="' + fileName + '"');
@@ -148,7 +141,7 @@ exports.getInvoice = async (req, res) => {
     doc.text("Total", { width: 100, align: "right" });
     doc.moveDown();
     order.Products.forEach((product) => {
-      doc.text(product['Product Name'], { width: 250 });
+      doc.text(product["Product Name"], { width: 250 });
       doc.text(product.ProductPrice.toFixed(2), { width: 100, align: "right" });
       doc.text(product.Qty.toString(), { width: 100, align: "right" });
       doc.text((product.ProductPrice * product.Qty).toFixed(2), {

@@ -49,3 +49,24 @@
   background: #bdf8bd;
   font-weight: 600;
 }
+.pageBtn{
+width:100%;
+  text-align:center;
+  margin:15px 0;
+}
+.pageBtn .pBtn{
+  text-decoration:none;
+  color:#00695c;
+  padding:5px 7px;
+  margin:auto 5px;
+  border:1px solid #055e05;
+  font-weight: 600;
+}
+.pageBtn .pBtn:hover{
+  color: #00695c;
+  background: #ffeb3b;
+}
+.pageBtn .pBtn.active{
+  color: #00695c;
+  background: #ffeb3b;
+}
