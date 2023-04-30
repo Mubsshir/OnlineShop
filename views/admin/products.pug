@@ -33,11 +33,12 @@ block content
                 form(action="/admin/edit-product/"+product.ProductTblRefID,method="GET")
                   input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
                   button.btn(type="submit") Edit
-                form(action="/admin/delete-product",method="POST")
+                div.deleteBtn
                   input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
-                  input(type="hidden",name="id" ,value=product.ProductTblRefID)
-                  button.btn(type="submit") Delete
+                  input(type="hidden",name="productID" ,value=product.ProductTblRefID)
+                  button.btn(type="button",onClick="deleteProduct(this)") Delete
       else
-         h1 No Products in shop  
+         h1 You Have no product in you account  
+  script(src="/scripts/delete.js") 
 
 
