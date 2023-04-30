@@ -5,13 +5,13 @@ const { validationResult } = require("express-validator/check");
 const nodeMailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 const crypto = require("crypto");
-const API_KEY=require('../keys/sendgrid')
+// const API_KEY=require('../keys/sendgrid')
 
 const transporter = nodeMailer.createTransport(
   sendGridTransport({
     auth: {
       api_key:
-      API_KEY
+      "API_KEY"
     }
   })
 );
