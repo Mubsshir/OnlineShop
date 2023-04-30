@@ -67,9 +67,10 @@ exports.getCart = async (req, res) => {
 exports.postCart = async (req, res) => {
   const prodID = req.body.productID;
   const uid = req.session.user;
+  const page=req.body.page;
   await Cart.addProduct(parseInt(prodID), parseInt(uid));
   req.flash("success", "Product Added to cart");
-  res.redirect("products");
+  res.redirect("products?page="+page);
 };
 exports.deleteCart = async (req, res) => {
   const id = req.body.id;
@@ -85,7 +86,6 @@ exports.getCheckout = (req, res) => {
 };
 exports.getOrders = async (req, res) => {
   const orders = await Cart.fetchOrders(req.session.user);
-  console.log(JSON.stringify(orders));
   return res.render("shop/orders", {
     docTitle: "Your Orders",
     path: "/orders",

@@ -1,4 +1,5 @@
 form(action="/cart",method="POST")
   input(type="hidden", name="_csrf" , value=csrfToken ,id="csrf")
   input(type="hidden", name="productID", value=product.ProductTblRefID)
+  input(type="hidden", name="page" , value=page  ,id="csrf")
   button.btn(type="submit") Add to Cart
